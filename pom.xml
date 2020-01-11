@@ -8,6 +8,8 @@
         <module>imakerlab-service</module>
         <module>imakerlab-dao</module>
         <module>imakerlab-model</module>
+        <module>imakerlab-security</module>
+        <module>imakerlab-component</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
