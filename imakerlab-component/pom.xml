@@ -11,5 +11,12 @@
 
     <artifactId>imakerlab-component</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

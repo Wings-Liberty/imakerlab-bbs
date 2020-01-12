@@ -11,5 +11,33 @@
 
     <artifactId>imakerlab-security</artifactId>
 
+    <dependencies>
+        <!--依赖其他子模块-->
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-dao</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-component</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!--        这个依赖会引入很多jar包-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <version>2.2.0.RELEASE</version>
+        </dependency>
+
+
+
+    </dependencies>
 
 </project>
