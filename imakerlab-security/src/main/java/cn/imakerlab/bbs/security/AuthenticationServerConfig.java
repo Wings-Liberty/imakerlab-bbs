@@ -21,12 +21,12 @@ import java.util.List;
 
 @Configuration
 @EnableAuthorizationServer
-public class AuthenticationServeConfig extends AuthorizationServerConfigurerAdapter {
+public class AuthenticationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Qualifier("userService")
+    @Qualifier("myUserDetailsService")
     @Autowired
     UserDetailsService userDetailsService;
 

@@ -29,6 +29,13 @@
 
     <dependencies>
 
+        <!--用于解析带有增强器添加的自定义属性的jwt, woc  0.9版本的没有jwts类-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
         <!--工具包-->
 
         <dependency>

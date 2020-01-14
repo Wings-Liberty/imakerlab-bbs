@@ -1,5 +1,6 @@
 package cn.imakerlab.bbs.security;
 
+import cn.imakerlab.bbs.constant.Constant;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.dto.UserExample;
 import cn.imakerlab.bbs.utils.MyUtils;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserService implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,15 +38,17 @@ public class UserService implements UserDetailsService {
                 userDao.selectByExample(example)
         );
 
-//        if (user == null){
-//            throw new UsernameNotFoundException(ErrorConstant.User.USER_NAME_NOTFOUND);
-//        }
+
+        if (user == null){
+            logger.error(Constant.User.USER_NAME_NOTFOUND);
+            throw new UsernameNotFoundException(Constant.User.USER_NAME_NOTFOUND);
+        }
 
         String password = user.getPassword();
 
         return new User(
                 username,
-                passwordEncoder.encode(password),
+                password,
                 AuthorityUtils.commaSeparatedStringToAuthorityList(""));
     }
 }

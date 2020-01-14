@@ -22,6 +22,7 @@ public class ResultUtils<T> {
         ResultUtils resultUtils = new ResultUtils();
         resultUtils.setCode(200);
         resultUtils.setMsg("成功");
+        resultUtils.setBody("");
 
         return resultUtils;
     }
@@ -31,6 +32,7 @@ public class ResultUtils<T> {
         ResultUtils resultUtils = new ResultUtils();
         resultUtils.setCode(code);
         resultUtils.setMsg("失败");
+        resultUtils.setBody("");
 
         return resultUtils;
     }
