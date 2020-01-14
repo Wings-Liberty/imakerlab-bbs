@@ -1,6 +1,6 @@
 package cn.imakerlab.bbs.service.Imp;
 
-import cn.imakerlab.bbs.constant.Constant;
+import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.dto.User;
 import cn.imakerlab.bbs.model.dto.UserExample;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.Valid;
 
@@ -32,9 +33,9 @@ public class UserServiceImp implements UserService {
     @Override
     public void register(@Valid UserVo userVo) {
 
-        if( isExistUsername(userVo.getUsername()) ){
+        if (isExistUsername(userVo.getUsername())) {
             logger.info("用户名：" + userVo.getUsername() + "已存在");
-            throw new MyException(Constant.User.USER_NAME_EXIT);
+            throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
         }
 
         logger.info("没有和" + userVo.getUsername() + "重复的名字，这个名字可以注册账号");
@@ -59,9 +60,9 @@ public class UserServiceImp implements UserService {
 
         User user = MyUtils.ListToOne(userDao.selectByExample(example));
 
-        if(user == null){
+        if (user == null) {
             result = false;
-        }else if(StringUtils.isEmpty(user.getUsername())) {
+        } else if (StringUtils.isEmpty(user.getUsername())) {
             result = false;
         }
 
@@ -81,6 +82,31 @@ public class UserServiceImp implements UserService {
         user.setPassword("");
 
         return user;
+
+    }
+
+    @Override
+    public void setFigureUrl(String figureUrl, String username) {
+
+        UserExample example = new UserExample();
+        example.createCriteria().andUsernameEqualTo(username);
+
+        User user = new User();
+        user.setFigureUrl(figureUrl);
+
+        userDao.updateByExampleSelective(user, example);
+    }
+
+    @Override
+    public void setSlogan(String slogan, String username) {
+
+        UserExample example = new UserExample();
+        example.createCriteria().andUsernameEqualTo(username);
+
+        User user = new User();
+        user.setSlogan(slogan);
+
+        userDao.updateByExampleSelective(user, example);
 
     }
 }

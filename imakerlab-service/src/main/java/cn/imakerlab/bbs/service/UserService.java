@@ -12,4 +12,7 @@ public interface UserService {
 
     User getUserByAuthentication(Authentication authentication);
 
+    void setFigureUrl(String figureUrl, String username);
+
+    void setSlogan(String slogan, String username);
 }

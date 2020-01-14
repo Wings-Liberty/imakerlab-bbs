@@ -16,7 +16,14 @@ spring:
       initial-size: 1
       min-idle: 2
       max-active: 5
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: cn.imakerlab.bbs.model
+
+# 最大支持文件大小
+  # 最大支持请求大小
