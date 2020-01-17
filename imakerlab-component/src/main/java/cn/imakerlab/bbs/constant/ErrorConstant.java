@@ -12,4 +12,8 @@ public interface ErrorConstant {
         String FILE_UPLOAD_ERROR = "文件上传失败";
         String FILE_SIZE_EXCEEDS = "文件大小超出限制";
     }
+
+    interface Token{
+        String TOKEN_IS_EXPIRED = "Access token expired";
+    }
 }

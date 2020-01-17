@@ -1,6 +1,6 @@
-package cn.imakerlab.bbs.security;
+package cn.imakerlab.bbs.security.serverconfig;
 
-
+import cn.imakerlab.bbs.security.exeception.MyExeceptionTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +19,15 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 认证服务器
+ */
 @Configuration
 @EnableAuthorizationServer
 public class AuthenticationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    @Autowired
+    MyExeceptionTranslator myExeceptionTranslator;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -49,7 +55,7 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
 
-        List<TokenEnhancer> list = new ArrayList();
+        List<TokenEnhancer> list = new ArrayList<>();
 
         list.add(jwtAccessTokenConverter);
         list.add(jwtTokenEnhancer);
@@ -58,8 +64,10 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 
         endpoints
                 .tokenEnhancer(tokenEnhancerChain);
-    }
 
+        endpoints.exceptionTranslator(myExeceptionTranslator);
+
+    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -68,7 +76,7 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
                 .withClient("imaker") //配置client-id
                 .secret(passwordEncoder.encode("imaker")) //配置client-secret
                 .authorizedGrantTypes("refresh_token", "password") //设置申请token的方式（只能从默认的五种方式里选），此后只能使用设定的方式申请token
-                .accessTokenValiditySeconds(3600) //设置令牌有效期3600秒
+                .accessTokenValiditySeconds(3660) //设置令牌有效期3600秒
                 .refreshTokenValiditySeconds(3600 * 24) //设置刷新令牌的有效期是一天
                 .scopes("all", "read", "write"); //设置用户能获得的权限都有哪些
 

@@ -1,5 +1,7 @@
 package cn.imakerlab.bbs.properties;
 
+import org.springframework.stereotype.Component;
+
 public class FileProperties {
 
     private String figureFolderUrl = "D:/IDEA-workspace/imakerlab-bbs/uploadfile";

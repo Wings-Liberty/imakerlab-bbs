@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -143,7 +144,7 @@ public class UserController {
             logger.info("从userMap中获取user");
             return UsersUtils.usersMap.get(username);
         } else {
-            logger.info("从数据库获取user");
+            logger.info("从数据库获取user，并将该user存入UserUtils的usersMap");
             User user = userService.getUserByAuthentication(authentication);
             UsersUtils.usersMap.put(username, user);
             return user;
@@ -170,7 +171,6 @@ public class UserController {
     public ResultUtils uploadFigure(@RequestParam(required = true) MultipartFile file,
                                     HttpServletRequest request,
                                     Authentication authentication) {
-
         //上传头像
         String figureUrl = MyUtils.uplode(file);
         logger.info("用户:"+authentication.getName() + "把头像保存在" +figureUrl);

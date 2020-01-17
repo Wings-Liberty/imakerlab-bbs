@@ -16,6 +16,8 @@ import java.util.UUID;
 public class MyUtils {
 
     private static ConfigProperties configProperties = new ConfigProperties();
+//    @Autowired
+//    private static ConfigProperties configProperties;
 
     public static <T> T ListToOne(List<T> list) {
 
@@ -34,7 +36,9 @@ public class MyUtils {
     public static String uplode(MultipartFile file) {
 
         //获取文件类型，将来会根据这个对方法做拓展
-//        System.out.println(file.getContentType());;
+//        System.out.println(file.getContentType());
+
+        System.out.println("配置类时null吗"+configProperties);
 
         if (file.isEmpty()) {
             throw new MyException(ErrorConstant.File.FILE_IS_EMPTY);

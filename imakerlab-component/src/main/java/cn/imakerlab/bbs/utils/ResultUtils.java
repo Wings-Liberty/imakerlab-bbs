@@ -1,5 +1,11 @@
 package cn.imakerlab.bbs.utils;
 
+import org.springframework.http.HttpStatus;
+
+/**
+ * 统一返回结果集
+ * @param <T>
+ */
 public class ResultUtils<T> {
 
     /**
@@ -20,7 +26,7 @@ public class ResultUtils<T> {
     public static ResultUtils success(){
 
         ResultUtils resultUtils = new ResultUtils();
-        resultUtils.setCode(200);
+        resultUtils.setCode(HttpStatus.OK.value());
         resultUtils.setMsg("成功");
         resultUtils.setBody("");
 

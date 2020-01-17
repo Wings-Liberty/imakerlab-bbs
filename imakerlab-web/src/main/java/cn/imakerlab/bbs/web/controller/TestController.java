@@ -29,15 +29,17 @@ public class TestController {
 
     @GetMapping("/getStr")
     @ResponseBody
-    public ResultUtils getStr(String str){
+    public ResultUtils getStr(String str, Authentication authentication){
 
         System.out.println(str);
-        
+
+
+
         return ResultUtils.success();
         
     }
 
-    @GetMapping("/getAuth")
+    @GetMapping("/authen")
     @ResponseBody
     public Authentication getAuth(Authentication authentication, HttpServletRequest request){
 
@@ -47,7 +49,7 @@ public class TestController {
 
     @GetMapping("/me")
     @ResponseBody
-    public Object getUser4(Authentication user, HttpServletRequest request) throws UnsupportedEncodingException {
+    public Object getUser(Authentication user, HttpServletRequest request) throws UnsupportedEncodingException {
         //使用jwt后，返回的是字符串，会自动组装为Authentication对象，里面会有很多东西，但是没有自定义添加进去的属性
 
         //要想获取带有自定义属性的对象，需要使用以下语句
@@ -65,32 +67,7 @@ public class TestController {
 
         System.out.println("claims : " + claims);
 
-        System.out.println("过期时间"+claims.getExpiration());
-
-
-        claims.setExpiration(new Date());
-
-        return claims;
-    }
-
-    @GetMapping("/me1")
-    @ResponseBody
-    public Object getUser3(Authentication user, HttpServletRequest request) throws UnsupportedEncodingException {
-        String header = request.getHeader("Authorization");
-
-        logger.info("header : " + header);
-
-        //这里的Bearer不能忽略大小写
-        String token = StringUtils.substringAfter(header, "Bearer ");
-
-        logger.info("token : " + token);
-
-        Claims claims = Jwts.parser().setSigningKey("cx".getBytes("UTF-8"))
-                .parseClaimsJws(token).getBody();
-
-        System.out.println("claims : " + claims);
-
-        System.out.println("过期时间"+claims.getExpiration());
+        System.out.println(claims.get("user_name"));
 
         return claims;
     }
