@@ -25,7 +25,7 @@ public class getTokenAspect {
         Object body = result.getBody();
 
         return new MyResponseEntity().setBody(
-                ResultUtils.success().setCode(HttpStatus.OK.value()).setMsg("成你妈功了").setBody(body)
+                ResultUtils.success().setCode(HttpStatus.OK.value()).setMsg("成功了").setData(body)
         );
 
     }

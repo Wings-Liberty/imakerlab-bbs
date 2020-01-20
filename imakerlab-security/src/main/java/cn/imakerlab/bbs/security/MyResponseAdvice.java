@@ -44,8 +44,6 @@ public class MyResponseAdvice implements ResponseBodyAdvice {
 
         ResponseEntity responseEntity = (ResponseEntity) o;
 
-        System.out.println("我要的body长这样\n" + responseEntity.getBody());
-
-        return ResultUtils.success().setBody(responseEntity.getBody());
+        return ResultUtils.success().setData(responseEntity.getBody());
     }
 }

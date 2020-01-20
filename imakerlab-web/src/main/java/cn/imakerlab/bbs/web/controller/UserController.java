@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 @Controller
 public class UserController {
@@ -31,7 +32,7 @@ public class UserController {
 
 
     /**
-     * @api {POST} /oauth/token 登陆
+     * @api {POST} /oauth/token 登录（获取令牌/刷新令牌）
      * @apiVersion 1.0.0
      * @apiGroup 用户
      * @apiName login
@@ -40,47 +41,52 @@ public class UserController {
      * @apiParam (请求参数) {String} scope 请求权限
      * @apiParam (请求参数) {String} username 用户名
      * @apiParam (请求参数) {String} password 密码
-     * @apiParam (请求参数) {String} [refresh_token] 刷新令牌
-     * @apiParamExample application/x-www-form-urlencoded传参示例
+     * @apiParam (请求参数) {String} [refresh_token] 刷新令牌，刷新令牌时使用的参数，登录时不需要传这个参数
+     * @apiParamExample 获取令牌传参示例（application/x-www-form-urlencoded）
      * {
      *     "grant_type":"password",
      *     "username":"tom",
      *     "password":"111",
      *     "scope":"all"
      * }
-     * @apiParamExample application/x-www-form-urlencoded传参示例
+     * @apiParamExample 刷新令牌传参示例（application/x-www-form-urlencoded）
      * {
      *     "grant_type":"refresh_token",
-     *     "username":"tom",
-     *     "password":"111",
-     *     "scope":"all"
+     *     "refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzkzMjgwNDQsInVzZXJfbmFtZSI6ImFhYSIsImp0aSI6IjgzMmExMjhmLWEwMjEtNGJjNS04YTA4LWJhNGNiN2I5YzQ2YSIsImNsaWVudF9pZCI6ImltYWtlciIsInNjb3BlIjpbImFsbCJdLCJhdGkiOiIwYzA2NjcyMy1kMDc2LTQ2NzQtOWZmOS1lNTNkZDg4NTA3YTkifQ.w4s_rkI2cqhiiwFQWwug4eQxwioEyxNLaWuKk1IuI44"
      * }
+     * @apiSuccess (响应结果) {Number} code 状态码
+     * @apiSuccess (响应结果) {String} msg 返回的字符串信息
+     * @apiSuccess (响应结果) {Object} data 返回的对象
      * @apiSuccess (响应结果) {String} access_token 令牌
-     * @apiSuccess (响应结果) {Number} expires_in 令牌过期时间
      * @apiSuccess (响应结果) {String} token_type 令牌类型
      * @apiSuccess (响应结果) {String} refresh_token 刷新令牌
-     * @apiSuccess (响应结果) {Object} body 返回的对象
+     * @apiSuccess (响应结果) {Number} expires_in 令牌剩余有效时间
+     * @apiSuccess (响应结果) {String} scope 请求的权限
      * @apiSuccessExample 成功响应结果示例
      * {
-     *     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg5ODA5MjksInVzZXJfbmFtZSI6ImFhYSIsImp0aSI6IjM3NjAxM2IyLWFkY2YtNGYxMC1hMDhhLTNkODZkNWJiZDhkOCIsImNsaWVudF9pZCI6ImltYWtlciIsInNjb3BlIjpbImFsbCJdfQ.GSEvaK-X4PHHXMPhs6MP3yiUkum1urv-ObU9980MwhE",
-     *     "token_type": "bearer",
-     *     "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzkwNjM3MjksInVzZXJfbmFtZSI6ImFhYSIsImp0aSI6IjkzYmRhOWJiLTJiYWQtNDJkMi04MDQyLWNjZTViMWIyOGFhMSIsImNsaWVudF9pZCI6ImltYWtlciIsInNjb3BlIjpbImFsbCJdLCJhdGkiOiIzNzYwMTNiMi1hZGNmLTRmMTAtYTA4YS0zZDg2ZDViYmQ4ZDgifQ.Hyf40vSumo8R1NpLBRcG0shNZTt_ZMeLMtpSmf-OBaA",
-     *     "expires_in": 3599,
-     *     "scope": "all",
-     *     "organization": "imaker"
+     *     "code": 200,
+     *     "msg": "成功",
+     *     "data": {
+     *         "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzkyNDE3MDQsInVzZXJfbmFtZSI6ImFhYSIsImp0aSI6IjBjMDY2NzIzLWQwNzYtNDY3NC05ZmY5LWU1M2RkODg1MDdhOSIsImNsaWVudF9pZCI6ImltYWtlciIsInNjb3BlIjpbImFsbCJdfQ.kmrFJEiOWOEWlOrVtOslLUj71Cgeg5IcuFN94jQ7URQ",
+     *         "token_type": "bearer",
+     *         "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzkzMjgwNDQsInVzZXJfbmFtZSI6ImFhYSIsImp0aSI6IjgzMmExMjhmLWEwMjEtNGJjNS04YTA4LWJhNGNiN2I5YzQ2YSIsImNsaWVudF9pZCI6ImltYWtlciIsInNjb3BlIjpbImFsbCJdLCJhdGkiOiIwYzA2NjcyMy1kMDc2LTQ2NzQtOWZmOS1lNTNkZDg4NTA3YTkifQ.w4s_rkI2cqhiiwFQWwug4eQxwioEyxNLaWuKk1IuI44",
+     *         "expires_in": 58,
+     *         "scope": "all",
+     *         "organization": "imaker"
+     *     }
      * }
-     * @apiError (响应结果) {String} error 错误类型
-     * @apiError (响应结果) {String} error_description 错误提示信息
      * @apiErrorExample 用户名或密码错误响应结果示例
      * {
-     *     "error": "invalid_grant",
-     *     "error_description": "用户名或密码错误"
+     *     "code": 100,
+     *     "msg": "用户名或密码错误",
+     *     "data": ""
      * }
      * @apiErrorExample 刷新令牌失败响应结果示例
      * {
-     *     "error": "invalid_grant",
-     *     "error_description": "Invalid refresh token: 1312412435135"
-     * }
+     *     "code": 100,
+     *     "msg": "令牌已过期",
+     *     "data": ""
+     *}
      */
 
     /**
@@ -123,16 +129,17 @@ public class UserController {
      * @apiSuccess (响应结果) {String} figureUrl 头像的url，图片存后端文件夹里
      * @apiSuccess (响应结果) {String} slogan 标语/个性签名
      * @apiSuccessExample 成功响应结果示例
-     * {"password":"","figureUrl":"/figuer","id":4910,"slogan":"我是个性签名","username":"我是用户名"}
-     * @apiErrorExample jwt过期响应结果示例
+     * {"password":"","figureUrl":"/figuer/user1","id":4910,"slogan":"我是个性签名","username":"我是用户名"}
+     * @apiErrorExample 令牌过期响应结果示例
      * {
-     *     "error": "invalid_token",
-     *     "error_description": "Access token expired: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg5OTU2NTIsInVzZXJfbmFtZSI6ImJiYiIsImp0aSI6Ijc1ZGZhOTkwLTRjODAtNGU2OC1hY2Y2LWE0ZDg4ZTQxZjgwYyIsImNsaWVudF9pZCI6ImltYWtlciIsInNjb3BlIjpbImFsbCJdfQ.jFJIQFnO9cJcdKM9Cv9_l8YGSj0IAqVUYsn5A1Yy94E"
+     *     "code": 100,
+     *     "msg": "令牌已过期",
+     *     "data": ""
      * }
      */
     @GetMapping("/user")
     @ResponseBody
-    public User getUser(Authentication authentication) {
+    public ResultUtils getUser(Authentication authentication) {
 
         if (authentication == null) {
             throw new MyException("请先登录");
@@ -142,12 +149,12 @@ public class UserController {
 
         if (UsersUtils.usersMap.containsKey(username)) {
             logger.info("从userMap中获取user");
-            return UsersUtils.usersMap.get(username);
+            return ResultUtils.success().setData(UsersUtils.usersMap.get(username));
         } else {
             logger.info("从数据库获取user，并将该user存入UserUtils的usersMap");
             User user = userService.getUserByAuthentication(authentication);
             UsersUtils.usersMap.put(username, user);
-            return user;
+            return ResultUtils.success().setData(user);
         }
     }
 
@@ -163,8 +170,14 @@ public class UserController {
      * @apiSuccess (响应结果) {Number} code 状态码
      * @apiSuccess (响应结果) {String} msg 返回的字符串信息
      * @apiSuccess (响应结果) {Object} body 返回的对象
-     * @apiSuccessExample 响应结果示例
+     * @apiSuccessExample 成功响应结果示例
      * {"msg":"成功","code":200,"body":{}}
+     * @apiErrorExample 图片大小超出限制响应结果示例
+     * {
+     *     "code": 100,
+     *     "msg": "文件大小超出限制",
+     *     "data": ""
+     * }
      */
     @PutMapping("/figure")
     @ResponseBody

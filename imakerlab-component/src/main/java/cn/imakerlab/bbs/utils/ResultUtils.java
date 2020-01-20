@@ -21,14 +21,14 @@ public class ResultUtils<T> {
     /**
      * 返回的对象
      */
-    private T body;
+    private T data;
 
     public static ResultUtils success(){
 
         ResultUtils resultUtils = new ResultUtils();
         resultUtils.setCode(HttpStatus.OK.value());
         resultUtils.setMsg("成功");
-        resultUtils.setBody("");
+        resultUtils.setData("");
 
         return resultUtils;
     }
@@ -38,7 +38,7 @@ public class ResultUtils<T> {
         ResultUtils resultUtils = new ResultUtils();
         resultUtils.setCode(code);
         resultUtils.setMsg("失败");
-        resultUtils.setBody("");
+        resultUtils.setData("");
 
         return resultUtils;
     }
@@ -61,14 +61,12 @@ public class ResultUtils<T> {
         return this;
     }
 
-    public T getBody() {
-        return body;
+    public T getData() {
+        return data;
     }
 
-    public ResultUtils<T> setBody(T body) {
-        this.body = body;
+    public ResultUtils<T> setData(T data) {
+        this.data = data;
         return this;
     }
-
-
 }
