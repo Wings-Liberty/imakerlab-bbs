@@ -5,40 +5,30 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * comment
+ * todo
  * @author 
  */
 @Data
-public class Comment implements Serializable {
+public class Todo implements Serializable {
     /**
-     * 评论的唯一标识符
+     * 唯一标识符
      */
     private Integer id;
 
     /**
-     * 评论的内容
+     * 目标内容
      */
-    private String content;
+    private String plan;
 
     /**
-     * 评论的时间
+     * 计划是否完成
      */
-    private Date commentTime;
+    private Byte status;
 
     /**
-     * 评论者用户名
+     * 计划完成时间
      */
-    private String userUsername;
-
-    /**
-     * 评论者的id
-     */
-    private Integer userId;
-
-    /**
-     * 所评论的文章的id
-     */
-    private String articleId;
+    private Date completeTime;
 
     /**
      * 是否被删除（逻辑删除）1——已经被删除，2——没有被删除

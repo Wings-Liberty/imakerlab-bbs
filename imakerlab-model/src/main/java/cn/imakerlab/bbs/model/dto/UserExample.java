@@ -443,6 +443,256 @@ public class UserExample {
             addCriterion("user.slogan not between", value1, value2, "slogan");
             return (Criteria) this;
         }
+
+        public Criteria andStartsIsNull() {
+            addCriterion("user.starts is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsIsNotNull() {
+            addCriterion("user.starts is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsEqualTo(Integer value) {
+            addCriterion("user.starts =", value, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsNotEqualTo(Integer value) {
+            addCriterion("user.starts <>", value, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsGreaterThan(Integer value) {
+            addCriterion("user.starts >", value, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsGreaterThanOrEqualTo(Integer value) {
+            addCriterion("user.starts >=", value, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsLessThan(Integer value) {
+            addCriterion("user.starts <", value, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsLessThanOrEqualTo(Integer value) {
+            addCriterion("user.starts <=", value, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsIn(List<Integer> values) {
+            addCriterion("user.starts in", values, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsNotIn(List<Integer> values) {
+            addCriterion("user.starts not in", values, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsBetween(Integer value1, Integer value2) {
+            addCriterion("user.starts between", value1, value2, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartsNotBetween(Integer value1, Integer value2) {
+            addCriterion("user.starts not between", value1, value2, "starts");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityIsNull() {
+            addCriterion("user.authority is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityIsNotNull() {
+            addCriterion("user.authority is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityEqualTo(String value) {
+            addCriterion("user.authority =", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityNotEqualTo(String value) {
+            addCriterion("user.authority <>", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityGreaterThan(String value) {
+            addCriterion("user.authority >", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityGreaterThanOrEqualTo(String value) {
+            addCriterion("user.authority >=", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityLessThan(String value) {
+            addCriterion("user.authority <", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityLessThanOrEqualTo(String value) {
+            addCriterion("user.authority <=", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityLike(String value) {
+            addCriterion("user.authority like", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityNotLike(String value) {
+            addCriterion("user.authority not like", value, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityIn(List<String> values) {
+            addCriterion("user.authority in", values, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityNotIn(List<String> values) {
+            addCriterion("user.authority not in", values, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityBetween(String value1, String value2) {
+            addCriterion("user.authority between", value1, value2, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorityNotBetween(String value1, String value2) {
+            addCriterion("user.authority not between", value1, value2, "authority");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedIsNull() {
+            addCriterion("user.is_deleted is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedIsNotNull() {
+            addCriterion("user.is_deleted is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedEqualTo(Byte value) {
+            addCriterion("user.is_deleted =", value, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedNotEqualTo(Byte value) {
+            addCriterion("user.is_deleted <>", value, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedGreaterThan(Byte value) {
+            addCriterion("user.is_deleted >", value, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedGreaterThanOrEqualTo(Byte value) {
+            addCriterion("user.is_deleted >=", value, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedLessThan(Byte value) {
+            addCriterion("user.is_deleted <", value, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedLessThanOrEqualTo(Byte value) {
+            addCriterion("user.is_deleted <=", value, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedIn(List<Byte> values) {
+            addCriterion("user.is_deleted in", values, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedNotIn(List<Byte> values) {
+            addCriterion("user.is_deleted not in", values, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedBetween(Byte value1, Byte value2) {
+            addCriterion("user.is_deleted between", value1, value2, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedNotBetween(Byte value1, Byte value2) {
+            addCriterion("user.is_deleted not between", value1, value2, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumIsNull() {
+            addCriterion("user.artical_num is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumIsNotNull() {
+            addCriterion("user.artical_num is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumEqualTo(Integer value) {
+            addCriterion("user.artical_num =", value, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumNotEqualTo(Integer value) {
+            addCriterion("user.artical_num <>", value, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumGreaterThan(Integer value) {
+            addCriterion("user.artical_num >", value, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("user.artical_num >=", value, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumLessThan(Integer value) {
+            addCriterion("user.artical_num <", value, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumLessThanOrEqualTo(Integer value) {
+            addCriterion("user.artical_num <=", value, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumIn(List<Integer> values) {
+            addCriterion("user.artical_num in", values, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumNotIn(List<Integer> values) {
+            addCriterion("user.artical_num not in", values, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumBetween(Integer value1, Integer value2) {
+            addCriterion("user.artical_num between", value1, value2, "articalNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticalNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("user.artical_num not between", value1, value2, "articalNum");
+            return (Criteria) this;
+        }
     }
 
     /**

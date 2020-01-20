@@ -7,6 +7,10 @@
     <result column="user_password" jdbcType="VARCHAR" property="password" />
     <result column="user_figure_url" jdbcType="VARCHAR" property="figureUrl" />
     <result column="user_slogan" jdbcType="VARCHAR" property="slogan" />
+    <result column="user_starts" jdbcType="INTEGER" property="starts" />
+    <result column="user_authority" jdbcType="VARCHAR" property="authority" />
+    <result column="user_is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="user_artical_num" jdbcType="INTEGER" property="articalNum" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +72,8 @@
   </sql>
   <sql id="Base_Column_List">
     user.id as user_id, user.username as user_username, user.`password` as `user_password`, 
-    user.figure_url as user_figure_url, user.slogan as user_slogan
+    user.figure_url as user_figure_url, user.slogan as user_slogan, user.starts as user_starts, 
+    user.authority as user_authority, user.is_deleted as user_is_deleted, user.artical_num as user_artical_num
   </sql>
   <select id="selectByExample" parameterType="cn.imakerlab.bbs.model.dto.UserExample" resultMap="BaseResultMap">
     select
@@ -102,9 +107,11 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.dto.User" useGeneratedKeys="true">
     insert into user (username, `password`, figure_url, 
-      slogan)
+      slogan, starts, authority, 
+      is_deleted, artical_num)
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{figureUrl,jdbcType=VARCHAR}, 
-      #{slogan,jdbcType=VARCHAR})
+      #{slogan,jdbcType=VARCHAR}, #{starts,jdbcType=INTEGER}, #{authority,jdbcType=VARCHAR}, 
+      #{isDeleted,jdbcType=TINYINT}, #{articalNum,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.dto.User" useGeneratedKeys="true">
     insert into user
@@ -121,6 +128,18 @@
       <if test="slogan != null">
         slogan,
       </if>
+      <if test="starts != null">
+        starts,
+      </if>
+      <if test="authority != null">
+        authority,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="articalNum != null">
+        artical_num,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -134,6 +153,18 @@
       </if>
       <if test="slogan != null">
         #{slogan,jdbcType=VARCHAR},
+      </if>
+      <if test="starts != null">
+        #{starts,jdbcType=INTEGER},
+      </if>
+      <if test="authority != null">
+        #{authority,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="articalNum != null">
+        #{articalNum,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -161,6 +192,18 @@
       <if test="record.slogan != null">
         user.slogan = #{record.slogan,jdbcType=VARCHAR},
       </if>
+      <if test="record.starts != null">
+        user.starts = #{record.starts,jdbcType=INTEGER},
+      </if>
+      <if test="record.authority != null">
+        user.authority = #{record.authority,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDeleted != null">
+        user.is_deleted = #{record.isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="record.articalNum != null">
+        user.artical_num = #{record.articalNum,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -172,7 +215,11 @@
       user.username = #{record.username,jdbcType=VARCHAR},
       user.`password` = #{record.password,jdbcType=VARCHAR},
       user.figure_url = #{record.figureUrl,jdbcType=VARCHAR},
-      user.slogan = #{record.slogan,jdbcType=VARCHAR}
+      user.slogan = #{record.slogan,jdbcType=VARCHAR},
+      user.starts = #{record.starts,jdbcType=INTEGER},
+      user.authority = #{record.authority,jdbcType=VARCHAR},
+      user.is_deleted = #{record.isDeleted,jdbcType=TINYINT},
+      user.artical_num = #{record.articalNum,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -192,6 +239,18 @@
       <if test="slogan != null">
         slogan = #{slogan,jdbcType=VARCHAR},
       </if>
+      <if test="starts != null">
+        starts = #{starts,jdbcType=INTEGER},
+      </if>
+      <if test="authority != null">
+        authority = #{authority,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="articalNum != null">
+        artical_num = #{articalNum,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -200,7 +259,11 @@
     set username = #{username,jdbcType=VARCHAR},
       `password` = #{password,jdbcType=VARCHAR},
       figure_url = #{figureUrl,jdbcType=VARCHAR},
-      slogan = #{slogan,jdbcType=VARCHAR}
+      slogan = #{slogan,jdbcType=VARCHAR},
+      starts = #{starts,jdbcType=INTEGER},
+      authority = #{authority,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      artical_num = #{articalNum,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

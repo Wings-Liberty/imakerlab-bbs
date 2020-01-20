@@ -76,7 +76,7 @@ public class Article implements Serializable {
     private Integer authorId;
 
     /**
-     * 是否被删除（逻辑删除）
+     * 是否被删除（逻辑删除）1——已经被删除，2——没有被删除
      */
     private Byte isDeleted;
 
