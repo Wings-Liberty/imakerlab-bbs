@@ -1,10 +1,12 @@
 package cn.imakerlab.bbs.mapper;
 
-import cn.imakerlab.bbs.model.dto.Todo;
-import cn.imakerlab.bbs.model.dto.TodoExample;
+import cn.imakerlab.bbs.model.po.Todo;
+import cn.imakerlab.bbs.model.po.TodoExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TodoDao {
     long countByExample(TodoExample example);
 

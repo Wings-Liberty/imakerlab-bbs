@@ -1,17 +1,18 @@
 package cn.imakerlab.bbs.web.controller;
 
-import cn.imakerlab.bbs.model.dto.User;
-import cn.imakerlab.bbs.model.exception.MyException;
+import cn.imakerlab.bbs.constant.DefaultConstant;
+import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.FileType;
 import cn.imakerlab.bbs.model.vo.UserVo;
+import cn.imakerlab.bbs.model.po.User;
+import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.MyUtils;
 import cn.imakerlab.bbs.utils.ResultUtils;
-import cn.imakerlab.bbs.utils.UsersUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
+import javax.xml.transform.Result;
 
 @Controller
 public class UserController {
@@ -29,7 +30,6 @@ public class UserController {
     @Qualifier("userServiceImp")
     @Autowired
     UserService userService;
-
 
     /**
      * @api {POST} /oauth/token 登录（获取令牌/刷新令牌）
@@ -132,9 +132,9 @@ public class UserController {
      * {"password":"","figureUrl":"/figuer/user1","id":4910,"slogan":"我是个性签名","username":"我是用户名"}
      * @apiErrorExample 令牌过期响应结果示例
      * {
-     *     "code": 100,
-     *     "msg": "令牌已过期",
-     *     "data": ""
+     * "code": 100,
+     * "msg": "令牌已过期",
+     * "data": ""
      * }
      */
     @GetMapping("/user")
@@ -145,17 +145,34 @@ public class UserController {
             throw new MyException("请先登录");
         }
 
-        String username = authentication.getName();
+//        暂时无法注销jwt，所以先不把登录的用户放进usersMap
+//        String username = authentication.getName();
+//        if (UsersUtils.usersMap.containsKey(username)) {
+//            logger.info("从userMap中获取user");
+//            return ResultUtils.success().setData(UsersUtils.usersMap.get(username));
+//        } else {
+//            logger.info("从数据库获取user，并将该user存入UserUtils的usersMap");
+//            User user = userService.getUserByAuthentication(authentication);
+//            UsersUtils.usersMap.put(username, user);
+//            return ResultUtils.success().setData(user);
+//        }
 
-        if (UsersUtils.usersMap.containsKey(username)) {
-            logger.info("从userMap中获取user");
-            return ResultUtils.success().setData(UsersUtils.usersMap.get(username));
-        } else {
-            logger.info("从数据库获取user，并将该user存入UserUtils的usersMap");
-            User user = userService.getUserByAuthentication(authentication);
-            UsersUtils.usersMap.put(username, user);
-            return ResultUtils.success().setData(user);
-        }
+        logger.info("从数据库获取user");
+        User user = userService.getUserByAuthentication(authentication);
+        return ResultUtils.success().setData(user);
+    }
+
+
+    @GetMapping("/user/{id}")
+    @ResponseBody
+    public ResultUtils getUserById(@PathVariable String id){
+
+        int userId = Integer.parseInt(id);
+
+        UserVo userVo = userService.getUserVoById(userId);
+
+        return ResultUtils.success().setData(userVo);
+
     }
 
     /**
@@ -174,19 +191,18 @@ public class UserController {
      * {"msg":"成功","code":200,"body":{}}
      * @apiErrorExample 图片大小超出限制响应结果示例
      * {
-     *     "code": 100,
-     *     "msg": "文件大小超出限制",
-     *     "data": ""
+     * "code": 100,
+     * "msg": "文件大小超出限制",
+     * "data": ""
      * }
      */
     @PutMapping("/figure")
     @ResponseBody
     public ResultUtils uploadFigure(@RequestParam(required = true) MultipartFile file,
-                                    HttpServletRequest request,
                                     Authentication authentication) {
         //上传头像
-        String figureUrl = MyUtils.uplode(file);
-        logger.info("用户:"+authentication.getName() + "把头像保存在" +figureUrl);
+        String figureUrl = MyUtils.uplode(file, FileType.FIGURE);
+        logger.info("用户:" + authentication.getName() + "把头像保存在" + figureUrl);
 
         //把头像的url存入数据库
         userService.setFigureUrl(figureUrl, authentication.getName());
@@ -209,12 +225,21 @@ public class UserController {
      * @apiSuccessExample 响应结果示例
      * {"msg":"成功","code":200,"body":{}}
      */
-    @PutMapping("/slogan")
+    @PutMapping("/user")
     @ResponseBody
-    public ResultUtils setSlogan(@RequestParam(required = true) String slogan,
-                                    Authentication authentication){
+    public ResultUtils setSloganOrUsername(@RequestParam(required = true) String newSlogan,
+                                 @RequestParam(required = true) String newUsername,
+                                 Authentication authentication) {
 
-        userService.setSlogan(slogan, authentication.getName());
+        if(userService.isExistUsername(newUsername)){
+            throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
+        }
+
+        if(newSlogan.length() > DefaultConstant.User.USER_SLOGAN_MAX_LENGTH){
+            throw new MyException(ErrorConstant.User.USER_SLOGAN_SIZE_EXECEEDS);
+        }
+
+        userService.setSlogan(authentication.getName(), newSlogan, newUsername);
 
         return ResultUtils.success();
     }

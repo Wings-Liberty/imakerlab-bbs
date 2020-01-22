@@ -1,4 +1,4 @@
-package cn.imakerlab.bbs.security.serverconfig;
+package cn.imakerlab.bbs.security.config;
 
 import cn.imakerlab.bbs.security.AuthExceptionEntryPoint;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +20,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/register").permitAll()
+                .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated();
     }

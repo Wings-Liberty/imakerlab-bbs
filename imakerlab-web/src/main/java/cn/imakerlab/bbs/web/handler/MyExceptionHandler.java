@@ -22,14 +22,14 @@ public class MyExceptionHandler {
         return ResultUtils.failure(100).setMsg(e.getMsg());
     }
 
-    @ResponseBody
-    @ExceptionHandler(value = Exception.class)
+//    @ResponseBody
+//    @ExceptionHandler(value = Exception.class)
     public ResultUtils myErrorHandler(Exception e) {
         String msg;
         if (e instanceof MethodArgumentNotValidException) {
             msg = ((MethodArgumentNotValidException) e).getBindingResult().getFieldError().getDefaultMessage();
         }else {
-            msg = ((BindException) e).getBindingResult().getFieldError().getDefaultMessage();
+            msg = e.getMessage();
         }
 
         logger.info(msg);

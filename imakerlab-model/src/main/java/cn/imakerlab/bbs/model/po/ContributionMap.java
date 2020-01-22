@@ -1,4 +1,4 @@
-package cn.imakerlab.bbs.model.dto;
+package cn.imakerlab.bbs.model.po;
 
 import java.io.Serializable;
 import lombok.Data;
@@ -30,7 +30,7 @@ public class ContributionMap implements Serializable {
     private Integer userId;
 
     /**
-     * 新文章数，特指新文章。修改旧文章，发布新公告等均不算此范围中
+     * 本周新文章数，特指新文章。修改旧文章，发布新公告等均不算此范围中
      */
     private Integer num;
 

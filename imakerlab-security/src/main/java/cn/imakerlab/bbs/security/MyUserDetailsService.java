@@ -2,7 +2,7 @@ package cn.imakerlab.bbs.security;
 
 import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.mapper.UserDao;
-import cn.imakerlab.bbs.model.dto.UserExample;
+import cn.imakerlab.bbs.model.po.UserExample;
 import cn.imakerlab.bbs.utils.MyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class MyUserDetailsService implements UserDetailsService {
         UserExample example = new UserExample();
         example.createCriteria().andUsernameEqualTo(username);
 
-        cn.imakerlab.bbs.model.dto.User user = MyUtils.ListToOne(
+        cn.imakerlab.bbs.model.po.User user = MyUtils.ListToOne(
                 userDao.selectByExample(example)
         );
 
@@ -49,6 +49,6 @@ public class MyUserDetailsService implements UserDetailsService {
         return new User(
                 username,
                 password,
-                AuthorityUtils.commaSeparatedStringToAuthorityList(""));
+                AuthorityUtils.commaSeparatedStringToAuthorityList(user.getAuthority()));
     }
 }

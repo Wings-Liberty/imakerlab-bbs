@@ -1,5 +1,6 @@
-package cn.imakerlab.bbs.security;
+package cn.imakerlab.bbs.security.config;
 
+import cn.imakerlab.bbs.security.JwtTokenEnhancer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

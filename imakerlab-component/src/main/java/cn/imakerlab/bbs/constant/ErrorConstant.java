@@ -5,6 +5,7 @@ public interface ErrorConstant {
     interface User{
         String USER_NAME_NOTFOUND = "用户名找不到";
         String USER_NAME_EXIT = "用户名已存在";
+        String USER_SLOGAN_SIZE_EXECEEDS = "用户的个性签名长度超出限制";
     }
 
     interface File {

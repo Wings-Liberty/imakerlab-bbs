@@ -1,4 +1,4 @@
-package cn.imakerlab.bbs.model.dto;
+package cn.imakerlab.bbs.model.po;
 
 import java.util.ArrayList;
 import java.util.Date;

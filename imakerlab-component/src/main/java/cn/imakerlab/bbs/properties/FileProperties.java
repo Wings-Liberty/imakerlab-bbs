@@ -1,12 +1,10 @@
 package cn.imakerlab.bbs.properties;
 
-import org.springframework.stereotype.Component;
-
 public class FileProperties {
 
     private String figureFolderUrl = "D:/IDEA-workspace/imakerlab-bbs/uploadfile";
 
-    private long figureMaxSize = 3*1024*1024;
+    private long figureMaxSize = 1024*1024;
 
     public long getFigureMaxSize() {
         return figureMaxSize;

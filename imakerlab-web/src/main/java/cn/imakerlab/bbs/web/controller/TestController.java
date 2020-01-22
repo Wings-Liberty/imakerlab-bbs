@@ -1,7 +1,7 @@
 package cn.imakerlab.bbs.web.controller;
 
-import cn.imakerlab.bbs.model.dto.User;
 import cn.imakerlab.bbs.service.Imp.TestServiceImp;
+import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Controller
 public class TestController {
@@ -27,23 +25,18 @@ public class TestController {
     @Autowired
     TestServiceImp service;
 
-    @GetMapping("/getStr")
+    @Autowired
+    UserService userService;
+
+
+    @GetMapping("/admin/test")
     @ResponseBody
-    public ResultUtils getStr(String str, Authentication authentication){
+    public ResultUtils admin(){
+        String string = "成功访问到了管理员接口";
 
-        System.out.println(str);
+        System.out.println(string);
 
-
-
-        return ResultUtils.success();
-        
-    }
-
-    @GetMapping("/authen")
-    @ResponseBody
-    public Authentication getAuth(Authentication authentication, HttpServletRequest request){
-
-        return authentication;
+        return ResultUtils.success().setMsg(string);
 
     }
 
@@ -59,7 +52,6 @@ public class TestController {
 
         //这里的Bearer不能忽略大小写
         String token = StringUtils.substringAfter(header, "Bearer ");
-
         logger.info("token : " + token);
 
         Claims claims = Jwts.parser().setSigningKey("cx".getBytes("UTF-8"))
@@ -70,6 +62,16 @@ public class TestController {
         System.out.println(claims.get("user_name"));
 
         return claims;
+    }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String user(){
+
+        userService.getUserVoById(19);
+
+        return "成功访问测试接口";
+
     }
 
 }

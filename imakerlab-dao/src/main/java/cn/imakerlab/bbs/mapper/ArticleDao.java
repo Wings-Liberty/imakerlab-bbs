@@ -1,10 +1,12 @@
 package cn.imakerlab.bbs.mapper;
 
-import cn.imakerlab.bbs.model.dto.Article;
-import cn.imakerlab.bbs.model.dto.ArticleExample;
+import cn.imakerlab.bbs.model.po.Article;
+import cn.imakerlab.bbs.model.po.ArticleExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ArticleDao {
     long countByExample(ArticleExample example);
 

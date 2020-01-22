@@ -1,10 +1,12 @@
 package cn.imakerlab.bbs.mapper;
 
-import cn.imakerlab.bbs.model.dto.ContributionMap;
-import cn.imakerlab.bbs.model.dto.ContributionMapExample;
+import cn.imakerlab.bbs.model.po.ContributionMap;
+import cn.imakerlab.bbs.model.po.ContributionMapExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ContributionMapDao {
     long countByExample(ContributionMapExample example);
 

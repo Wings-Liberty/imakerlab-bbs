@@ -1,4 +1,4 @@
-package cn.imakerlab.bbs.model.dto;
+package cn.imakerlab.bbs.model.po;
 
 import java.io.Serializable;
 import lombok.Data;
@@ -37,7 +37,7 @@ public class User implements Serializable {
     /**
      * 用户个人获赞数，获赞数为该用户所有文章获赞数的总和
      */
-    private Integer starts;
+    private Integer stars;
 
     /**
      * 用户权限。具体有哪些权限，代码的权限枚举类里自己找
@@ -52,7 +52,7 @@ public class User implements Serializable {
     /**
      * 该用户发布的文章总数。修改文章和发布公告均不计算在其中
      */
-    private Integer articalNum;
+    private Integer articleNum;
 
     private static final long serialVersionUID = 1L;
 }

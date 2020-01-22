@@ -26,7 +26,7 @@ public class MyResponseAdvice implements ResponseBodyAdvice {
 
         System.out.println("拦截的方法名是" + methodParameter.getMethod().getName());;
 
-        if(methodParameter.getMethod().getName().equals(DefaultConstant.GET_TOKEN_METHOD)){
+        if(methodParameter.getMethod().getName().equals(DefaultConstant.Token.GET_TOKEN_METHOD)){
             return true;
         }
 

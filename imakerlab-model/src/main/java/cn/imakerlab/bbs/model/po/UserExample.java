@@ -1,4 +1,4 @@
-package cn.imakerlab.bbs.model.dto;
+package cn.imakerlab.bbs.model.po;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -444,63 +444,63 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andStartsIsNull() {
-            addCriterion("user.starts is null");
+        public Criteria andStarsIsNull() {
+            addCriterion("user.stars is null");
             return (Criteria) this;
         }
 
-        public Criteria andStartsIsNotNull() {
-            addCriterion("user.starts is not null");
+        public Criteria andStarsIsNotNull() {
+            addCriterion("user.stars is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStartsEqualTo(Integer value) {
-            addCriterion("user.starts =", value, "starts");
+        public Criteria andStarsEqualTo(Integer value) {
+            addCriterion("user.stars =", value, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsNotEqualTo(Integer value) {
-            addCriterion("user.starts <>", value, "starts");
+        public Criteria andStarsNotEqualTo(Integer value) {
+            addCriterion("user.stars <>", value, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsGreaterThan(Integer value) {
-            addCriterion("user.starts >", value, "starts");
+        public Criteria andStarsGreaterThan(Integer value) {
+            addCriterion("user.stars >", value, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsGreaterThanOrEqualTo(Integer value) {
-            addCriterion("user.starts >=", value, "starts");
+        public Criteria andStarsGreaterThanOrEqualTo(Integer value) {
+            addCriterion("user.stars >=", value, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsLessThan(Integer value) {
-            addCriterion("user.starts <", value, "starts");
+        public Criteria andStarsLessThan(Integer value) {
+            addCriterion("user.stars <", value, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsLessThanOrEqualTo(Integer value) {
-            addCriterion("user.starts <=", value, "starts");
+        public Criteria andStarsLessThanOrEqualTo(Integer value) {
+            addCriterion("user.stars <=", value, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsIn(List<Integer> values) {
-            addCriterion("user.starts in", values, "starts");
+        public Criteria andStarsIn(List<Integer> values) {
+            addCriterion("user.stars in", values, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsNotIn(List<Integer> values) {
-            addCriterion("user.starts not in", values, "starts");
+        public Criteria andStarsNotIn(List<Integer> values) {
+            addCriterion("user.stars not in", values, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsBetween(Integer value1, Integer value2) {
-            addCriterion("user.starts between", value1, value2, "starts");
+        public Criteria andStarsBetween(Integer value1, Integer value2) {
+            addCriterion("user.stars between", value1, value2, "stars");
             return (Criteria) this;
         }
 
-        public Criteria andStartsNotBetween(Integer value1, Integer value2) {
-            addCriterion("user.starts not between", value1, value2, "starts");
+        public Criteria andStarsNotBetween(Integer value1, Integer value2) {
+            addCriterion("user.stars not between", value1, value2, "stars");
             return (Criteria) this;
         }
 
@@ -634,63 +634,63 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumIsNull() {
-            addCriterion("user.artical_num is null");
+        public Criteria andArticleNumIsNull() {
+            addCriterion("user.article_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumIsNotNull() {
-            addCriterion("user.artical_num is not null");
+        public Criteria andArticleNumIsNotNull() {
+            addCriterion("user.article_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumEqualTo(Integer value) {
-            addCriterion("user.artical_num =", value, "articalNum");
+        public Criteria andArticleNumEqualTo(Integer value) {
+            addCriterion("user.article_num =", value, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumNotEqualTo(Integer value) {
-            addCriterion("user.artical_num <>", value, "articalNum");
+        public Criteria andArticleNumNotEqualTo(Integer value) {
+            addCriterion("user.article_num <>", value, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumGreaterThan(Integer value) {
-            addCriterion("user.artical_num >", value, "articalNum");
+        public Criteria andArticleNumGreaterThan(Integer value) {
+            addCriterion("user.article_num >", value, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumGreaterThanOrEqualTo(Integer value) {
-            addCriterion("user.artical_num >=", value, "articalNum");
+        public Criteria andArticleNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("user.article_num >=", value, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumLessThan(Integer value) {
-            addCriterion("user.artical_num <", value, "articalNum");
+        public Criteria andArticleNumLessThan(Integer value) {
+            addCriterion("user.article_num <", value, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumLessThanOrEqualTo(Integer value) {
-            addCriterion("user.artical_num <=", value, "articalNum");
+        public Criteria andArticleNumLessThanOrEqualTo(Integer value) {
+            addCriterion("user.article_num <=", value, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumIn(List<Integer> values) {
-            addCriterion("user.artical_num in", values, "articalNum");
+        public Criteria andArticleNumIn(List<Integer> values) {
+            addCriterion("user.article_num in", values, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumNotIn(List<Integer> values) {
-            addCriterion("user.artical_num not in", values, "articalNum");
+        public Criteria andArticleNumNotIn(List<Integer> values) {
+            addCriterion("user.article_num not in", values, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumBetween(Integer value1, Integer value2) {
-            addCriterion("user.artical_num between", value1, value2, "articalNum");
+        public Criteria andArticleNumBetween(Integer value1, Integer value2) {
+            addCriterion("user.article_num between", value1, value2, "articleNum");
             return (Criteria) this;
         }
 
-        public Criteria andArticalNumNotBetween(Integer value1, Integer value2) {
-            addCriterion("user.artical_num not between", value1, value2, "articalNum");
+        public Criteria andArticleNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("user.article_num not between", value1, value2, "articleNum");
             return (Criteria) this;
         }
     }

@@ -1,16 +1,18 @@
-package cn.imakerlab.bbs.model.dto;
+package cn.imakerlab.bbs.model.po;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
-public class ContributionMapExample {
+public class TodoExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public ContributionMapExample() {
+    public TodoExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -104,303 +106,339 @@ public class ContributionMapExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        protected void addCriterionForJDBCDate(String condition, Date value, String property) {
+            if (value == null) {
+                throw new RuntimeException("Value for " + property + " cannot be null");
+            }
+            addCriterion(condition, new java.sql.Date(value.getTime()), property);
+        }
+
+        protected void addCriterionForJDBCDate(String condition, List<Date> values, String property) {
+            if (values == null || values.size() == 0) {
+                throw new RuntimeException("Value list for " + property + " cannot be null or empty");
+            }
+            List<java.sql.Date> dateList = new ArrayList<>();
+            Iterator<Date> iter = values.iterator();
+            while (iter.hasNext()) {
+                dateList.add(new java.sql.Date(iter.next().getTime()));
+            }
+            addCriterion(condition, dateList, property);
+        }
+
+        protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property) {
+            if (value1 == null || value2 == null) {
+                throw new RuntimeException("Between values for " + property + " cannot be null");
+            }
+            addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
+        }
+
         public Criteria andIdIsNull() {
-            addCriterion("contribution_map.id is null");
+            addCriterion("todo.id is null");
             return (Criteria) this;
         }
 
         public Criteria andIdIsNotNull() {
-            addCriterion("contribution_map.id is not null");
+            addCriterion("todo.id is not null");
             return (Criteria) this;
         }
 
         public Criteria andIdEqualTo(Integer value) {
-            addCriterion("contribution_map.id =", value, "id");
+            addCriterion("todo.id =", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdNotEqualTo(Integer value) {
-            addCriterion("contribution_map.id <>", value, "id");
+            addCriterion("todo.id <>", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdGreaterThan(Integer value) {
-            addCriterion("contribution_map.id >", value, "id");
+            addCriterion("todo.id >", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.id >=", value, "id");
+            addCriterion("todo.id >=", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdLessThan(Integer value) {
-            addCriterion("contribution_map.id <", value, "id");
+            addCriterion("todo.id <", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.id <=", value, "id");
+            addCriterion("todo.id <=", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdIn(List<Integer> values) {
-            addCriterion("contribution_map.id in", values, "id");
+            addCriterion("todo.id in", values, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdNotIn(List<Integer> values) {
-            addCriterion("contribution_map.id not in", values, "id");
+            addCriterion("todo.id not in", values, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.id between", value1, value2, "id");
+            addCriterion("todo.id between", value1, value2, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.id not between", value1, value2, "id");
+            addCriterion("todo.id not between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andYearIsNull() {
-            addCriterion("contribution_map.`year` is null");
+        public Criteria andPlanIsNull() {
+            addCriterion("todo.`plan` is null");
             return (Criteria) this;
         }
 
-        public Criteria andYearIsNotNull() {
-            addCriterion("contribution_map.`year` is not null");
+        public Criteria andPlanIsNotNull() {
+            addCriterion("todo.`plan` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andYearEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` =", value, "year");
+        public Criteria andPlanEqualTo(String value) {
+            addCriterion("todo.`plan` =", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearNotEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` <>", value, "year");
+        public Criteria andPlanNotEqualTo(String value) {
+            addCriterion("todo.`plan` <>", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearGreaterThan(Integer value) {
-            addCriterion("contribution_map.`year` >", value, "year");
+        public Criteria andPlanGreaterThan(String value) {
+            addCriterion("todo.`plan` >", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` >=", value, "year");
+        public Criteria andPlanGreaterThanOrEqualTo(String value) {
+            addCriterion("todo.`plan` >=", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearLessThan(Integer value) {
-            addCriterion("contribution_map.`year` <", value, "year");
+        public Criteria andPlanLessThan(String value) {
+            addCriterion("todo.`plan` <", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` <=", value, "year");
+        public Criteria andPlanLessThanOrEqualTo(String value) {
+            addCriterion("todo.`plan` <=", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearIn(List<Integer> values) {
-            addCriterion("contribution_map.`year` in", values, "year");
+        public Criteria andPlanLike(String value) {
+            addCriterion("todo.`plan` like", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearNotIn(List<Integer> values) {
-            addCriterion("contribution_map.`year` not in", values, "year");
+        public Criteria andPlanNotLike(String value) {
+            addCriterion("todo.`plan` not like", value, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.`year` between", value1, value2, "year");
+        public Criteria andPlanIn(List<String> values) {
+            addCriterion("todo.`plan` in", values, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andYearNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.`year` not between", value1, value2, "year");
+        public Criteria andPlanNotIn(List<String> values) {
+            addCriterion("todo.`plan` not in", values, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andWeekIsNull() {
-            addCriterion("contribution_map.week is null");
+        public Criteria andPlanBetween(String value1, String value2) {
+            addCriterion("todo.`plan` between", value1, value2, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andWeekIsNotNull() {
-            addCriterion("contribution_map.week is not null");
+        public Criteria andPlanNotBetween(String value1, String value2) {
+            addCriterion("todo.`plan` not between", value1, value2, "plan");
             return (Criteria) this;
         }
 
-        public Criteria andWeekEqualTo(Integer value) {
-            addCriterion("contribution_map.week =", value, "week");
+        public Criteria andStatusIsNull() {
+            addCriterion("todo.`status` is null");
             return (Criteria) this;
         }
 
-        public Criteria andWeekNotEqualTo(Integer value) {
-            addCriterion("contribution_map.week <>", value, "week");
+        public Criteria andStatusIsNotNull() {
+            addCriterion("todo.`status` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andWeekGreaterThan(Integer value) {
-            addCriterion("contribution_map.week >", value, "week");
+        public Criteria andStatusEqualTo(Byte value) {
+            addCriterion("todo.`status` =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andWeekGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.week >=", value, "week");
+        public Criteria andStatusNotEqualTo(Byte value) {
+            addCriterion("todo.`status` <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andWeekLessThan(Integer value) {
-            addCriterion("contribution_map.week <", value, "week");
+        public Criteria andStatusGreaterThan(Byte value) {
+            addCriterion("todo.`status` >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andWeekLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.week <=", value, "week");
+        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
+            addCriterion("todo.`status` >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andWeekIn(List<Integer> values) {
-            addCriterion("contribution_map.week in", values, "week");
+        public Criteria andStatusLessThan(Byte value) {
+            addCriterion("todo.`status` <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andWeekNotIn(List<Integer> values) {
-            addCriterion("contribution_map.week not in", values, "week");
+        public Criteria andStatusLessThanOrEqualTo(Byte value) {
+            addCriterion("todo.`status` <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andWeekBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.week between", value1, value2, "week");
+        public Criteria andStatusIn(List<Byte> values) {
+            addCriterion("todo.`status` in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andWeekNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.week not between", value1, value2, "week");
+        public Criteria andStatusNotIn(List<Byte> values) {
+            addCriterion("todo.`status` not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIsNull() {
-            addCriterion("contribution_map.user_id is null");
+        public Criteria andStatusBetween(Byte value1, Byte value2) {
+            addCriterion("todo.`status` between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIsNotNull() {
-            addCriterion("contribution_map.user_id is not null");
+        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
+            addCriterion("todo.`status` not between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id =", value, "userId");
+        public Criteria andCompleteTimeIsNull() {
+            addCriterion("todo.complete_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id <>", value, "userId");
+        public Criteria andCompleteTimeIsNotNull() {
+            addCriterion("todo.complete_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdGreaterThan(Integer value) {
-            addCriterion("contribution_map.user_id >", value, "userId");
+        public Criteria andCompleteTimeEqualTo(Date value) {
+            addCriterionForJDBCDate("todo.complete_time =", value, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id >=", value, "userId");
+        public Criteria andCompleteTimeNotEqualTo(Date value) {
+            addCriterionForJDBCDate("todo.complete_time <>", value, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdLessThan(Integer value) {
-            addCriterion("contribution_map.user_id <", value, "userId");
+        public Criteria andCompleteTimeGreaterThan(Date value) {
+            addCriterionForJDBCDate("todo.complete_time >", value, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id <=", value, "userId");
+        public Criteria andCompleteTimeGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("todo.complete_time >=", value, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIn(List<Integer> values) {
-            addCriterion("contribution_map.user_id in", values, "userId");
+        public Criteria andCompleteTimeLessThan(Date value) {
+            addCriterionForJDBCDate("todo.complete_time <", value, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotIn(List<Integer> values) {
-            addCriterion("contribution_map.user_id not in", values, "userId");
+        public Criteria andCompleteTimeLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("todo.complete_time <=", value, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.user_id between", value1, value2, "userId");
+        public Criteria andCompleteTimeIn(List<Date> values) {
+            addCriterionForJDBCDate("todo.complete_time in", values, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.user_id not between", value1, value2, "userId");
+        public Criteria andCompleteTimeNotIn(List<Date> values) {
+            addCriterionForJDBCDate("todo.complete_time not in", values, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andNumIsNull() {
-            addCriterion("contribution_map.num is null");
+        public Criteria andCompleteTimeBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("todo.complete_time between", value1, value2, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andNumIsNotNull() {
-            addCriterion("contribution_map.num is not null");
+        public Criteria andCompleteTimeNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("todo.complete_time not between", value1, value2, "completeTime");
             return (Criteria) this;
         }
 
-        public Criteria andNumEqualTo(Integer value) {
-            addCriterion("contribution_map.num =", value, "num");
+        public Criteria andIsDeletedIsNull() {
+            addCriterion("todo.is_deleted is null");
             return (Criteria) this;
         }
 
-        public Criteria andNumNotEqualTo(Integer value) {
-            addCriterion("contribution_map.num <>", value, "num");
+        public Criteria andIsDeletedIsNotNull() {
+            addCriterion("todo.is_deleted is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNumGreaterThan(Integer value) {
-            addCriterion("contribution_map.num >", value, "num");
+        public Criteria andIsDeletedEqualTo(Byte value) {
+            addCriterion("todo.is_deleted =", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andNumGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.num >=", value, "num");
+        public Criteria andIsDeletedNotEqualTo(Byte value) {
+            addCriterion("todo.is_deleted <>", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andNumLessThan(Integer value) {
-            addCriterion("contribution_map.num <", value, "num");
+        public Criteria andIsDeletedGreaterThan(Byte value) {
+            addCriterion("todo.is_deleted >", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andNumLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.num <=", value, "num");
+        public Criteria andIsDeletedGreaterThanOrEqualTo(Byte value) {
+            addCriterion("todo.is_deleted >=", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andNumIn(List<Integer> values) {
-            addCriterion("contribution_map.num in", values, "num");
+        public Criteria andIsDeletedLessThan(Byte value) {
+            addCriterion("todo.is_deleted <", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andNumNotIn(List<Integer> values) {
-            addCriterion("contribution_map.num not in", values, "num");
+        public Criteria andIsDeletedLessThanOrEqualTo(Byte value) {
+            addCriterion("todo.is_deleted <=", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andNumBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.num between", value1, value2, "num");
+        public Criteria andIsDeletedIn(List<Byte> values) {
+            addCriterion("todo.is_deleted in", values, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andNumNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.num not between", value1, value2, "num");
+        public Criteria andIsDeletedNotIn(List<Byte> values) {
+            addCriterion("todo.is_deleted not in", values, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedBetween(Byte value1, Byte value2) {
+            addCriterion("todo.is_deleted between", value1, value2, "isDeleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeletedNotBetween(Byte value1, Byte value2) {
+            addCriterion("todo.is_deleted not between", value1, value2, "isDeleted");
             return (Criteria) this;
         }
     }
