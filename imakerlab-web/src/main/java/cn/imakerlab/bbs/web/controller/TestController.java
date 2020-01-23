@@ -1,6 +1,9 @@
 package cn.imakerlab.bbs.web.controller;
 
+import cn.imakerlab.bbs.mapper.UserDao;
+import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.service.Imp.TestServiceImp;
+import cn.imakerlab.bbs.service.Imp.UserServiceImp;
 import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import io.jsonwebtoken.Claims;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +30,10 @@ public class TestController {
     TestServiceImp service;
 
     @Autowired
-    UserService userService;
+    UserServiceImp userService;
 
+    @Autowired
+    UserDao userDao;
 
     @GetMapping("/admin/test")
     @ResponseBody
@@ -43,6 +49,7 @@ public class TestController {
     @GetMapping("/me")
     @ResponseBody
     public Object getUser(Authentication user, HttpServletRequest request) throws UnsupportedEncodingException {
+
         //使用jwt后，返回的是字符串，会自动组装为Authentication对象，里面会有很多东西，但是没有自定义添加进去的属性
 
         //要想获取带有自定义属性的对象，需要使用以下语句
@@ -64,14 +71,30 @@ public class TestController {
         return claims;
     }
 
-    @GetMapping("/test")
+    @GetMapping("/test/{id}")
     @ResponseBody
-    public String user(){
+    public ResultUtils user(@PathVariable String id){
 
-        userService.getUserVoById(19);
+        int userId = Integer.parseInt(id);
 
-        return "成功访问测试接口";
+//        UserVo userVo = userService.getUserVoById(userId);
 
+        System.out.println(userService);
+
+        userService.getUseraaa();
+
+        return ResultUtils.success();
+
+    }
+
+    @GetMapping("/test/dao")
+    @ResponseBody
+    public ResultUtils testdao(){
+        int userId = Integer.parseInt("19");
+
+        User user = userDao.selectByPrimaryKey(19);
+
+        return ResultUtils.success().setData(user);
     }
 
 }

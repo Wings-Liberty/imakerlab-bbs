@@ -16,6 +16,7 @@
     <result column="article_author_name" jdbcType="VARCHAR" property="authorName" />
     <result column="article_author_id" jdbcType="INTEGER" property="authorId" />
     <result column="article_is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="article_type" jdbcType="VARCHAR" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +81,8 @@
     article.`text` as `article_text`, article.cover_url as article_cover_url, article.likes as article_likes, 
     article.views as article_views, article.release_time as article_release_time, article.last_modified as article_last_modified, 
     article.delete_time as article_delete_time, article.`label` as `article_label`, article.author_name as article_author_name, 
-    article.author_id as article_author_id, article.is_deleted as article_is_deleted
+    article.author_id as article_author_id, article.is_deleted as article_is_deleted, 
+    article.`type` as `article_type`
   </sql>
   <select id="selectByExample" parameterType="cn.imakerlab.bbs.model.po.ArticleExample" resultMap="BaseResultMap">
     select
@@ -117,12 +119,12 @@
       cover_url, likes, views, 
       release_time, last_modified, delete_time, 
       `label`, author_name, author_id, 
-      is_deleted)
+      is_deleted, `type`)
     values (#{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR}, 
       #{coverUrl,jdbcType=VARCHAR}, #{likes,jdbcType=INTEGER}, #{views,jdbcType=INTEGER}, 
       #{releaseTime,jdbcType=DATE}, #{lastModified,jdbcType=DATE}, #{deleteTime,jdbcType=DATE}, 
       #{label,jdbcType=VARCHAR}, #{authorName,jdbcType=VARCHAR}, #{authorId,jdbcType=INTEGER}, 
-      #{isDeleted,jdbcType=TINYINT})
+      #{isDeleted,jdbcType=TINYINT}, #{type,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.po.Article" useGeneratedKeys="true">
     insert into article
@@ -166,6 +168,9 @@
       <if test="isDeleted != null">
         is_deleted,
       </if>
+      <if test="type != null">
+        `type`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="title != null">
@@ -206,6 +211,9 @@
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -260,6 +268,9 @@
       <if test="record.isDeleted != null">
         article.is_deleted = #{record.isDeleted,jdbcType=TINYINT},
       </if>
+      <if test="record.type != null">
+        article.`type` = #{record.type,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -280,7 +291,8 @@
       article.`label` = #{record.label,jdbcType=VARCHAR},
       article.author_name = #{record.authorName,jdbcType=VARCHAR},
       article.author_id = #{record.authorId,jdbcType=INTEGER},
-      article.is_deleted = #{record.isDeleted,jdbcType=TINYINT}
+      article.is_deleted = #{record.isDeleted,jdbcType=TINYINT},
+      article.`type` = #{record.type,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -327,6 +339,9 @@
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=TINYINT},
       </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -344,7 +359,8 @@
       `label` = #{label,jdbcType=VARCHAR},
       author_name = #{authorName,jdbcType=VARCHAR},
       author_id = #{authorId,jdbcType=INTEGER},
-      is_deleted = #{isDeleted,jdbcType=TINYINT}
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      `type` = #{type,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
