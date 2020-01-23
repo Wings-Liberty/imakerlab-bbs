@@ -6,6 +6,7 @@ import cn.imakerlab.bbs.constant.FileType;
 import cn.imakerlab.bbs.model.vo.UserVo;
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.exception.MyException;
+import cn.imakerlab.bbs.service.Imp.UserServiceImp;
 import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.MyUtils;
 import cn.imakerlab.bbs.utils.ResultUtils;
@@ -27,9 +28,8 @@ public class UserController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Qualifier("userServiceImp")
     @Autowired
-    UserService userService;
+    UserServiceImp userService;
 
     /**
      * @api {POST} /oauth/token 登录（获取令牌/刷新令牌）

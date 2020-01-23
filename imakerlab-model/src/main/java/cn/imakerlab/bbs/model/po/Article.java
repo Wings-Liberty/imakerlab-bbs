@@ -80,5 +80,7 @@ public class Article implements Serializable {
      */
     private Byte isDeleted;
 
+    private String type;
+
     private static final long serialVersionUID = 1L;
 }

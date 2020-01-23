@@ -3,10 +3,13 @@ package cn.imakerlab.bbs.mapper;
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.po.UserExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Mapper
 public interface UserDao {
     long countByExample(UserExample example);
 
