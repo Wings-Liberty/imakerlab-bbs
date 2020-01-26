@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class TestController {
@@ -66,35 +68,36 @@ public class TestController {
 
         System.out.println("claims : " + claims);
 
-        System.out.println(claims.get("user_name"));
+        String id = (String) claims.get("userId");
+
+        String organization = (String) claims.get("organization");
+
+        System.out.println(id);
+
+        System.out.println(organization);
 
         return claims;
     }
 
-    @GetMapping("/test/{id}")
+    @GetMapping("/userlist")
     @ResponseBody
-    public ResultUtils user(@PathVariable String id){
+    public ResultUtils userList(){
 
-        int userId = Integer.parseInt(id);
+        List<Integer> list = new ArrayList<>();
 
-//        UserVo userVo = userService.getUserVoById(userId);
+        list.add(30);
+        list.add(31);
 
-        System.out.println(userService);
+        List<User> userList = service.getUsersByList(list);
 
-        userService.getUseraaa();
+        System.out.println(userList);
+
+        for(User user : userList){
+            System.out.println(user);
+        }
 
         return ResultUtils.success();
 
-    }
-
-    @GetMapping("/test/dao")
-    @ResponseBody
-    public ResultUtils testdao(){
-        int userId = Integer.parseInt("19");
-
-        User user = userDao.selectByPrimaryKey(19);
-
-        return ResultUtils.success().setData(user);
     }
 
 }

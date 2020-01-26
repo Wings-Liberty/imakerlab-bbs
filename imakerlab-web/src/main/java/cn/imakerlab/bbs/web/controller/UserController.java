@@ -3,25 +3,27 @@ package cn.imakerlab.bbs.web.controller;
 import cn.imakerlab.bbs.constant.DefaultConstant;
 import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.constant.FileType;
-import cn.imakerlab.bbs.model.vo.UserVo;
-import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.exception.MyException;
+import cn.imakerlab.bbs.model.po.ContributionMap;
+import cn.imakerlab.bbs.model.po.User;
+import cn.imakerlab.bbs.model.vo.UserVo;
+import cn.imakerlab.bbs.service.Imp.ContributionMapServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
-import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.MyUtils;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.xml.transform.Result;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -30,6 +32,9 @@ public class UserController {
 
     @Autowired
     UserServiceImp userService;
+
+    @Autowired
+    ContributionMapServiceImp contributionMapService;
 
     /**
      * @api {POST} /oauth/token 登录（获取令牌/刷新令牌）
@@ -157,6 +162,8 @@ public class UserController {
 //            return ResultUtils.success().setData(user);
 //        }
 
+        System.out.println(authentication);
+
         logger.info("从数据库获取user");
         User user = userService.getUserByAuthentication(authentication);
         return ResultUtils.success().setData(user);
@@ -165,7 +172,7 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @ResponseBody
-    public ResultUtils getUserById(@PathVariable String id){
+    public ResultUtils getUserById(@PathVariable String id) {
 
         int userId = Integer.parseInt(id);
 
@@ -211,7 +218,7 @@ public class UserController {
     }
 
     /**
-     * @api {PUT} /slogan 修改个性签名
+     * @api {PUT} /slogan 修改个性签名和用户名
      * @apiVersion 1.0.0
      * @apiGroup 用户
      * @apiName setSlogan
@@ -227,21 +234,55 @@ public class UserController {
      */
     @PutMapping("/user")
     @ResponseBody
-    public ResultUtils setSloganOrUsername(@RequestParam(required = true) String newSlogan,
-                                 @RequestParam(required = true) String newUsername,
-                                 Authentication authentication) {
+    public ResultUtils setSloganOrUsername(
+            @RequestParam(required = true)
+                    int id,
+            @RequestParam(required = true)
+                    String newSlogan,
+            @RequestParam(required = true)
+                    String newUsername) {
 
-        if(userService.isExistUsername(newUsername)){
+        if (userService.isExistUsername(newUsername)) {
             throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
+        } else if (newUsername.length() > DefaultConstant.User.USER_NAME_MAX_LENGTH) {
+            throw new MyException(ErrorConstant.User.USER_SLOGAN_SIZE_EXECEEDS);
+        } else if (!java.util.regex.Pattern.matches("([a-z]|[A-Z]|[0-9]|[\\u4e00-\\u9fa5])+.*", newUsername)) {
+            throw new MyException("用户名格式违法，正确格式为字母，汉字，数字开头");
         }
 
-        if(newSlogan.length() > DefaultConstant.User.USER_SLOGAN_MAX_LENGTH){
+        if (newSlogan.length() > DefaultConstant.User.USER_SLOGAN_MAX_LENGTH) {
             throw new MyException(ErrorConstant.User.USER_SLOGAN_SIZE_EXECEEDS);
         }
 
-        userService.setSlogan(authentication.getName(), newSlogan, newUsername);
+
+        userService.setSloganAndUsername(id, newSlogan, newUsername);
 
         return ResultUtils.success();
+    }
+
+    @GetMapping("/calendar/{userId}")
+    @ResponseBody
+    public ResultUtils getCalendar(@PathVariable String userId){
+        Integer id = Integer.parseInt(userId);
+
+        List<ContributionMap> list = contributionMapService.getCalendarByUserId(id);
+
+        Map map = new HashMap();
+        map.put("set", list);
+
+        return ResultUtils.success().setData(map);
+    }
+
+    @PutMapping("/user/password")
+    @ResponseBody
+    public ResultUtils modifyPassword(@RequestParam(required = true) String oldPassword,
+                                      @RequestParam(required = true) String newPassword,
+                                      @RequestParam(required = true) int id){
+
+        userService.modifyByUserId(id, oldPassword, newPassword);
+
+        return ResultUtils.success();
+
     }
 
 }

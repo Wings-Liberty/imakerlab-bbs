@@ -42,6 +42,11 @@ public class UserVo {
      */
     private String figureUrl;
 
+    /**
+     * 用户个人获赞数，获赞数为该用户所有文章获赞数的总和
+     */
+    private Integer stars;
+
     public UserVo() {
     }
 
@@ -52,6 +57,7 @@ public class UserVo {
         this.authority = user.getAuthority();
         this.articleNum = user.getArticleNum();
         this.figureUrl = user.getFigureUrl();
+        this.stars = user.getStars();
     }
 
 }

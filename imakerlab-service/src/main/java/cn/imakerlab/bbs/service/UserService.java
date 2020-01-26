@@ -16,11 +16,13 @@ public interface UserService {
 
     void setFigureUrl(String figureUrl, String username);
 
-    void setSlogan(String username, String newSlogan, String newUsername);
+    void setSloganAndUsername(int id, String newSlogan, String newUsername);
 
     UserVo getUserVoById(int id);
 
     List<User> getAllNotDeletedUser();
 
-    User getUseraaa();
+    void deleteUserByList(List<Integer> delList);
+
+    void modifyByUserId(int id, String oldPassword, String newPassword);
 }

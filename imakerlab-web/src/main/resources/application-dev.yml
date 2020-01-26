@@ -26,3 +26,6 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: cn.imakerlab.bbs.model
+pagehelper:
+  reasonable: true
+

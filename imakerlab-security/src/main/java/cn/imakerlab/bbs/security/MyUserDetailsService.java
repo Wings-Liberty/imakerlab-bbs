@@ -38,7 +38,6 @@ public class MyUserDetailsService implements UserDetailsService {
                 userDao.selectByExample(example)
         );
 
-
         if (user == null){
             logger.error(ErrorConstant.User.USER_NAME_NOTFOUND);
             throw new UsernameNotFoundException(ErrorConstant.User.USER_NAME_NOTFOUND);

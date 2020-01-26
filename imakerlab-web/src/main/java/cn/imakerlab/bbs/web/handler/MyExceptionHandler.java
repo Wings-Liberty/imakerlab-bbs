@@ -26,8 +26,8 @@ public class MyExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public ResultUtils myErrorHandler(Exception e) {
         String msg;
-        if (e instanceof MethodArgumentNotValidException) {
-            msg = ((MethodArgumentNotValidException) e).getBindingResult().getFieldError().getDefaultMessage();
+        if(e instanceof BindException){
+            msg = ((BindException) e).getBindingResult().getFieldError().getDefaultMessage();
         }else {
             msg = e.getMessage();
         }
