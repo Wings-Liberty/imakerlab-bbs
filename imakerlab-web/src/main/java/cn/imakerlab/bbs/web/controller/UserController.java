@@ -7,10 +7,12 @@ import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.po.ContributionMap;
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.vo.UserVo;
+import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.ContributionMapServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
 import cn.imakerlab.bbs.utils.MyUtils;
 import cn.imakerlab.bbs.utils.ResultUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Controller
 public class UserController {
 
@@ -144,11 +148,9 @@ public class UserController {
      */
     @GetMapping("/user")
     @ResponseBody
-    public ResultUtils getUser(Authentication authentication) {
+    public ResultUtils getUser(HttpServletRequest request) {
 
-        if (authentication == null) {
-            throw new MyException("请先登录");
-        }
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
 //        暂时无法注销jwt，所以先不把登录的用户放进usersMap
 //        String username = authentication.getName();
@@ -162,11 +164,9 @@ public class UserController {
 //            return ResultUtils.success().setData(user);
 //        }
 
-        System.out.println(authentication);
-
-        logger.info("从数据库获取user");
-        User user = userService.getUserByAuthentication(authentication);
-        return ResultUtils.success().setData(user);
+        log.info("从数据库获取user");
+        UserVo userVo = userService.getUserVoById(userId);
+        return ResultUtils.success().setData(userVo);
     }
 
 
@@ -206,13 +206,16 @@ public class UserController {
     @PutMapping("/figure")
     @ResponseBody
     public ResultUtils uploadFigure(@RequestParam(required = true) MultipartFile file,
-                                    Authentication authentication) {
+                                    HttpServletRequest request) {
+
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
         //上传头像
         String figureUrl = MyUtils.uplode(file, FileType.FIGURE);
-        logger.info("用户:" + authentication.getName() + "把头像保存在" + figureUrl);
+        log.info("id为" + userId + "的用户:" + "把头像保存在" + figureUrl);
 
         //把头像的url存入数据库
-        userService.setFigureUrl(figureUrl, authentication.getName());
+        userService.setFigureUrl(figureUrl, userId);
 
         return ResultUtils.success();
     }
@@ -235,12 +238,13 @@ public class UserController {
     @PutMapping("/user")
     @ResponseBody
     public ResultUtils setSloganOrUsername(
-            @RequestParam(required = true)
-                    int id,
-            @RequestParam(required = true)
+           @RequestParam(required = true)
                     String newSlogan,
             @RequestParam(required = true)
-                    String newUsername) {
+                    String newUsername,
+            HttpServletRequest request) {
+
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
         if (userService.isExistUsername(newUsername)) {
             throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
@@ -255,17 +259,17 @@ public class UserController {
         }
 
 
-        userService.setSloganAndUsername(id, newSlogan, newUsername);
+        userService.setSloganAndUsername(userId, newSlogan, newUsername);
 
         return ResultUtils.success();
     }
 
-    @GetMapping("/calendar/{userId}")
+    @GetMapping("/calendar/{userIdStr}")
     @ResponseBody
-    public ResultUtils getCalendar(@PathVariable String userId){
-        Integer id = Integer.parseInt(userId);
+    public ResultUtils getCalendar(@PathVariable String userIdStr){
+        Integer userId = Integer.parseInt(userIdStr);
 
-        List<ContributionMap> list = contributionMapService.getCalendarByUserId(id);
+        List<ContributionMap> list = contributionMapService.getCalendarByUserId(userId);
 
         Map map = new HashMap();
         map.put("set", list);
@@ -277,9 +281,11 @@ public class UserController {
     @ResponseBody
     public ResultUtils modifyPassword(@RequestParam(required = true) String oldPassword,
                                       @RequestParam(required = true) String newPassword,
-                                      @RequestParam(required = true) int id){
+                                      HttpServletRequest request){
 
-        userService.modifyByUserId(id, oldPassword, newPassword);
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
+        userService.modifyByUserId(userId, oldPassword, newPassword);
 
         return ResultUtils.success();
 

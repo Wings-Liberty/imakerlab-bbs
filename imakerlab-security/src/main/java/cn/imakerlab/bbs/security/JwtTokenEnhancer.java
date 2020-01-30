@@ -31,7 +31,7 @@ public class JwtTokenEnhancer implements TokenEnhancer {
         System.out.println("JwtTokenEnhancer查到的user\n" + user);
 
         info.put("organization", "imakerlab");
-        info.put("userId", user.getId());
+        info.put("userId", user.getId().toString());
 
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 

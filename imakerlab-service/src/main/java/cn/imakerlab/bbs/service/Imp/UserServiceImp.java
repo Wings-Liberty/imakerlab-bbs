@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class UserServiceImp implements UserService {
 
@@ -90,10 +92,10 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void setFigureUrl(String figureUrl, String username) {
+    public void setFigureUrl(String figureUrl, int id) {
 
         UserExample example = new UserExample();
-        example.createCriteria().andUsernameEqualTo(username);
+        example.createCriteria().andIdEqualTo(id);
 
         User user = new User();
         user.setFigureUrl(figureUrl);
@@ -102,7 +104,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void setSloganAndUsername(int id,String newSlogan,  String newUsername) {
+    public void setSloganAndUsername(int id, String newSlogan,  String newUsername) {
 
         UserExample example = new UserExample();
         example.createCriteria().andIdEqualTo(id);
