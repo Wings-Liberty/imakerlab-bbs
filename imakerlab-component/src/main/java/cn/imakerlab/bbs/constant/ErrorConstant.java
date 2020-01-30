@@ -8,6 +8,9 @@ public interface ErrorConstant {
         String USER_SLOGAN_SIZE_EXECEEDS = "用户的个性签名长度超出限制";
     }
 
+    interface Article{
+        String SEARCH_CONTENT_NULL="搜索内容不能为空";
+    }
     interface File {
         String FILE_IS_EMPTY = "文件是空的";
         String FILE_UPLOAD_ERROR = "文件上传失败";

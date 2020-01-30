@@ -19,6 +19,7 @@ public class MyExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = MyException.class)
     public ResultUtils myExceptionHandler(MyException e){
+        logger.info(e.getMsg());
         return ResultUtils.failure(100).setMsg(e.getMsg());
     }
 
