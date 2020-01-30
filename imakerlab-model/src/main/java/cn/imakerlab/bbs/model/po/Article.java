@@ -8,7 +8,7 @@ import lombok.Data;
 
 /**
  * article
- * @author 
+ * @author
  */
 @Data
 

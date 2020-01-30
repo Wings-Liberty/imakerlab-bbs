@@ -2,6 +2,7 @@ package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.po.User;
+import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.TestServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
 import cn.imakerlab.bbs.service.UserService;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,37 +68,26 @@ public class TestController {
         Claims claims = Jwts.parser().setSigningKey("cx".getBytes("UTF-8"))
                 .parseClaimsJws(token).getBody();
 
+        System.out.println("claims对象的实际类型是" + claims.getClass());
+
         System.out.println("claims : " + claims);
 
-        String id = (String) claims.get("userId");
+        System.out.println("id : " +(String) claims.get("userId"));
 
-        String organization = (String) claims.get("organization");
-
-        System.out.println(id);
-
-        System.out.println(organization);
+        System.out.println("organization : " + (String) claims.get("organization"));
 
         return claims;
     }
 
-    @GetMapping("/userlist")
+    @GetMapping("/me2")
     @ResponseBody
-    public ResultUtils userList(){
+    public ResultUtils userList(HttpServletRequest request){
 
-        List<Integer> list = new ArrayList<>();
+        Integer id = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
-        list.add(30);
-        list.add(31);
+        System.out.println(id);
 
-        List<User> userList = service.getUsersByList(list);
-
-        System.out.println(userList);
-
-        for(User user : userList){
-            System.out.println(user);
-        }
-
-        return ResultUtils.success();
+        return ResultUtils.success().setData(id);
 
     }
 
