@@ -6,9 +6,11 @@ import cn.imakerlab.bbs.model.po.TodoExample;
 import cn.imakerlab.bbs.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class TodoServiceImp implements TodoService {
 
@@ -27,10 +29,10 @@ public class TodoServiceImp implements TodoService {
     }
 
     @Override
-    public void modifyTodoById(Todo todo) {
+    public void modifyTodoById(int userId, Todo todo) {
 
         TodoExample example = new TodoExample();
-        example.createCriteria().andIdEqualTo(todo.getId());
+        example.createCriteria().andIdEqualTo(todo.getId()).andUserIdEqualTo(userId);
 
         todoDao.updateByExampleSelective(todo, example);
 
@@ -44,11 +46,14 @@ public class TodoServiceImp implements TodoService {
     }
 
     @Override
-    public void deleteTodoByArray(List<Integer> delList) {
+    public void deleteTodoByArray(int userId, List<Integer> delList) {
 
         TodoExample example = new TodoExample();
-        example.createCriteria().andIdIn(delList);
+        example.createCriteria().andIdIn(delList).andUserIdEqualTo(userId);
 
-        todoDao.deleteByExample(example);
+        Todo todo = new Todo();
+        todo.setIsDeleted((byte) 1);
+
+        todoDao.updateByExampleSelective(todo, example);
     }
 }

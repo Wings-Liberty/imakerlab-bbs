@@ -2,6 +2,7 @@ package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.po.Todo;
+import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.TodoServiceImp;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +22,13 @@ public class TodoController {
     TodoServiceImp todoService;
 
 
-    @GetMapping("todo/{idStr}")
+    @GetMapping("todo/{userIdStr}")
     @ResponseBody
-    public ResultUtils getTodoListByUserId(@PathVariable String idStr) {
+    public ResultUtils getTodoListByUserId(@PathVariable String userIdStr) {
 
-        Integer id = Integer.parseInt(idStr);
+        Integer id = Integer.parseInt(userIdStr);
 
         List<Todo> todoList = todoService.getTodoListByUserId(id);
-
-        if (CollectionUtils.isEmpty(todoList)) {
-            throw new MyException("获取到的todo为空，原因是该用户id不存在，或该用户todo列表本来就是空");
-        }
 
         Map map = new HashMap();
 
@@ -42,8 +40,10 @@ public class TodoController {
     @PostMapping("/todo")
     @ResponseBody
     public ResultUtils addTodo(
-            @RequestParam(required = true) int userId,
-            @RequestParam(required = true) Todo todo) {
+            @RequestParam(required = true) Todo todo,
+            HttpServletRequest request) {
+
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
         todoService.addTodoByUserId(userId, todo);
 
@@ -53,23 +53,28 @@ public class TodoController {
     @PutMapping("/todo")
     @ResponseBody
     public ResultUtils modifyTodoTodoById(
-            @RequestParam(required = true) int userId,
-            @RequestParam(required = true) Todo todo) {
+            @RequestParam(required = true) Todo todo,
+            HttpServletRequest request) {
 
-        todoService.modifyTodoById(todo);
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
+        todoService.modifyTodoById(userId, todo);
 
         return ResultUtils.success();
     }
 
     @DeleteMapping("/todo")
     @ResponseBody
-    public ResultUtils deleteTodoByArray(@RequestParam(required = true) List<Integer> delList){
+    public ResultUtils deleteTodoByArray(@RequestParam(required = true) List<Integer> delList,
+                                         HttpServletRequest request){
 
         if(CollectionUtils.isEmpty(delList)){
             throw new MyException("delList是空的");
         }
 
-        todoService.deleteTodoByArray(delList);
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
+        todoService.deleteTodoByArray(userId, delList);
 
         return  ResultUtils.success();
     }
