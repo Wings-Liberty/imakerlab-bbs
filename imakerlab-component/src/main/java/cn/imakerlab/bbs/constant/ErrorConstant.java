@@ -17,4 +17,8 @@ public interface ErrorConstant {
     interface Token{
         String TOKEN_IS_EXPIRED = "Access token expired";
     }
+
+    interface Field{
+        String ARRAY_IS_EMPTYORNULL = "数组要再是空的，我三天之内杀了你";
+    }
 }

@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -103,13 +102,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void setSlogan(String slogan, String username, String newUsername) {
+    public void setSloganAndUsername(int id,String newSlogan,  String newUsername) {
 
         UserExample example = new UserExample();
-        example.createCriteria().andUsernameEqualTo(username);
+        example.createCriteria().andIdEqualTo(id);
 
         User user = new User();
-        user.setSlogan(slogan);
+        user.setSlogan(newSlogan);
         user.setUsername(newUsername);
 
         userDao.updateByExampleSelective(user, example);
@@ -136,8 +135,6 @@ public class UserServiceImp implements UserService {
     @Override
     public List<User> getAllNotDeletedUser() {
 
-        System.out.println("进入userservice");
-
         UserExample example = new UserExample();
         example.createCriteria().andIsDeletedEqualTo((byte) 0);
 
@@ -148,10 +145,44 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User getUseraaa() {
-        User user = userDao.selectByPrimaryKey(19);
+    public void deleteUserByList(List<Integer> delList) {
 
-        return user;
+        UserExample example = new UserExample();
+
+        example.createCriteria().andIdIn(delList);
+
+        List<User> userList = userDao.selectByExample(example);
+
+        System.out.println(userList);
+
+        System.out.println("要删除的元素有");
+
+        for(User user : userList){
+            System.out.println(user);
+        }
+
+        userDao.deleteByExample(example);
+    }
+
+    @Override
+    public void modifyByUserId(int id, String oldPassword, String newPassword) {
+
+        UserExample example = new UserExample();
+        example.createCriteria().andIdEqualTo(id);
+
+
+        if( passwordEncoder.matches(oldPassword, userDao.selectByPrimaryKey(id).getPassword()) ){
+            logger.info("密码正确，可以修改密码");
+
+            User user = new User();
+            user.setPassword(passwordEncoder.encode(newPassword));
+
+            userDao.updateByExampleSelective(user, example);
+        }else {
+            throw new MyException("输入的旧密码错误，请重新输入");
+        }
+
+
     }
 
 }

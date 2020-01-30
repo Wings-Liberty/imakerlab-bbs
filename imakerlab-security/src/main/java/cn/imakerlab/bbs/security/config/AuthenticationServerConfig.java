@@ -56,8 +56,9 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 
         List<TokenEnhancer> list = new ArrayList<>();
 
-        list.add(jwtAccessTokenConverter);
+        //list添加元素的很重要
         list.add(jwtTokenEnhancer);
+        list.add(jwtAccessTokenConverter);
 
         tokenEnhancerChain.setTokenEnhancers(list);
 

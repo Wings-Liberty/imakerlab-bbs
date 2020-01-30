@@ -35,5 +35,10 @@ public class Todo implements Serializable {
      */
     private Byte isDeleted;
 
+    /**
+     * 用户的id
+     */
+    private Integer userId;
+
     private static final long serialVersionUID = 1L;
 }

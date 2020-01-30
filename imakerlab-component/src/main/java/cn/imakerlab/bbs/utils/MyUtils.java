@@ -22,14 +22,14 @@ public class MyUtils {
 
     public static <T> T ListToOne(List<T> list) {
 
-        //不知道list长度为0是是否返回fals
+        //不知道list长度为0是是否返回false
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
         if (list.size() == 1) {
             return list.get(0);
         } else {
-            throw new MyException();
+            throw new MyException("MyUtils的ListToOne方法抛出的异常，因为希望获取到的list不是null但是size也不为1");
         }
 
     }
