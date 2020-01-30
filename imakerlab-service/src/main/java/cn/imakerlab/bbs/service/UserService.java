@@ -14,7 +14,7 @@ public interface UserService {
 
     User getUserByAuthentication(Authentication authentication);
 
-    void setFigureUrl(String figureUrl, String username);
+    void setFigureUrl(String figureUrl, int id);
 
     void setSloganAndUsername(int id, String newSlogan, String newUsername);
 

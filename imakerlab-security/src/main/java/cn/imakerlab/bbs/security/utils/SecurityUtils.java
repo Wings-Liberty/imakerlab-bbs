@@ -27,7 +27,7 @@ public class SecurityUtils {
 
         System.out.println("claims : " + claims);
 
-        Integer userId =  Integer.parseInt((String) claims.get("userId"));
+        Integer userId = (Integer) claims.get("userId");
 
         return userId;
     }

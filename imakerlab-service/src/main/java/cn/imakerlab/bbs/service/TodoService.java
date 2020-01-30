@@ -6,9 +6,9 @@ import java.util.List;
 public interface TodoService{
     List<Todo> getTodoListByUserId(Integer id);
 
-    void modifyTodoById(Todo todo);
+    void modifyTodoById(int userId, Todo todo);
 
     void addTodoByUserId(int userId, Todo todo);
 
-    void deleteTodoByArray(List<Integer> delList);
+    void deleteTodoByArray(int userId, List<Integer> delList);
 }

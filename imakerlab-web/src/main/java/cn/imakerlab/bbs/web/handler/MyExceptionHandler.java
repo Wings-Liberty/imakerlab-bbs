@@ -19,23 +19,22 @@ public class MyExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = MyException.class)
     public ResultUtils myExceptionHandler(MyException e){
-        logger.info(e.getMsg());
         return ResultUtils.failure(100).setMsg(e.getMsg());
     }
 
-    @ResponseBody
-    @ExceptionHandler(value = Exception.class)
-    public ResultUtils myErrorHandler(Exception e) {
-        String msg;
-        if(e instanceof BindException){
-            msg = ((BindException) e).getBindingResult().getFieldError().getDefaultMessage();
-        }else {
-            msg = e.getMessage();
-        }
-
-        logger.info(msg);
-
-        return ResultUtils.failure(100).setMsg(msg);
-    }
+//    @ResponseBody
+//    @ExceptionHandler(value = Exception.class)
+//    public ResultUtils myErrorHandler(Exception e) {
+//        String msg;
+//        if(e instanceof BindException){
+//            msg = ((BindException) e).getBindingResult().getFieldError().getDefaultMessage();
+//        }else {
+//            msg = e.getMessage();
+//        }
+//
+//        logger.info(msg);
+//
+//        return ResultUtils.failure(100).setMsg(msg);
+//    }
 
 }
