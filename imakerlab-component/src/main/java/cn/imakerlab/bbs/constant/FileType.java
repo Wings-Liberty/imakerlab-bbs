@@ -1,11 +1,11 @@
 package cn.imakerlab.bbs.constant;
 
 public enum FileType {
-    FIGURE(value = "figure");
+    FIGURE("figure", 1024*1024);
 
+    private String value;
+    private Integer maxSize;
 
-    private static String value;
-
-    FileType(String value) {
+    FileType(String value, Integer maxSize) {
     }
 }

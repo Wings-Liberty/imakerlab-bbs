@@ -43,6 +43,7 @@ public class MyUtils {
         if(file.getSize() > configProperties.getFile().getFigureMaxSize()){
             throw new MyException(ErrorConstant.File.FILE_SIZE_EXCEEDS);
         }
+
         // 获取文件名
         String fileName = UUID.randomUUID().toString() + file.getOriginalFilename();
 

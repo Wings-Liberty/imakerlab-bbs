@@ -44,4 +44,9 @@ public class test {
 
     }
 
+    @Test
+    public void test(){
+        Class c = User.class;
+    }
+
 }

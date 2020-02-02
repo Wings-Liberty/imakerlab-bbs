@@ -4,11 +4,15 @@ import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.po.UserExample;
 import cn.imakerlab.bbs.service.TestService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class TestServiceImp implements TestService {
 
