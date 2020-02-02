@@ -1,5 +1,6 @@
 package cn.imakerlab.bbs.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,7 @@ public class ArticleVo {
     /**
      * 发布时间
      */
+    @JsonFormat(pattern="yyyy年MM月dd日 HH时mm分ss秒")
     private Date releaseTime;
 
 

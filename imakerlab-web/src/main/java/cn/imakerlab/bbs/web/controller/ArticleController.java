@@ -1,26 +1,28 @@
 package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.constant.ErrorConstant;
-import cn.imakerlab.bbs.mapper.UserDao;
+import cn.imakerlab.bbs.constant.FileType;
 import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.po.Article;
-import cn.imakerlab.bbs.model.po.UserExample;
+import cn.imakerlab.bbs.model.po.User;
+import cn.imakerlab.bbs.model.vo.BackContentVo;
+import cn.imakerlab.bbs.model.vo.GetArticlesMsgByTypeVo;
 import cn.imakerlab.bbs.model.vo.UserAndArticleAndCommentsVo;
-import cn.imakerlab.bbs.model.vo.backContentVo;
-import cn.imakerlab.bbs.service.ArticleService;
+import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.ArticleServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
+import cn.imakerlab.bbs.utils.MyUtils;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Slf4j
@@ -33,17 +35,17 @@ public class ArticleController {
     UserServiceImp userServiceImp;
     @ResponseBody
     @GetMapping("/article/{type}")
-    public ResultUtils getArticlesMsgByType(@PathVariable("type")  String type,@RequestParam("pn")  Integer pn){
-        System.out.println(type);
-        List<Article> articlesMsgByType = articleServiceImp.getArticlesMsgByType(type);
-        for (Article article : articlesMsgByType) {
-            System.out.println(article);
-        }
+    public ResultUtils getArticlesMsgByType(@PathVariable(value="type",required = true)  String type,
+                                            @RequestParam(value="pn",required = true)  Integer pn){
+
+        List<GetArticlesMsgByTypeVo> articlesMsgByType = articleServiceImp.getArticlesMsgByType(type);
+
         if (articlesMsgByType.size()>5){
             articlesMsgByType.subList(0,5);
         }
         PageHelper.startPage(pn,5);
-        PageInfo<Article> articlePageInfo = new PageInfo<>(articlesMsgByType);
+        PageInfo<GetArticlesMsgByTypeVo> articlePageInfo = new PageInfo<>(articlesMsgByType);
+
         return ResultUtils.success(articlePageInfo);
     }
 
@@ -52,7 +54,7 @@ public class ArticleController {
     @GetMapping("/search")
     public ResultUtils searchMsgByKey(@RequestParam("key") String key) throws Exception {
         if (key != null && key != "") {
-            List<backContentVo> backContentVos = articleServiceImp.searchMsgByKey(key);
+            List<BackContentVo> backContentVos = articleServiceImp.searchMsgByKey(key);
             if (backContentVos==null||backContentVos.size()==0){
                 return ResultUtils.failure(100);
             }
@@ -64,89 +66,44 @@ public class ArticleController {
 
     @ResponseBody
     @GetMapping("/label")
-    public ResultUtils getLabel(Authentication authentication){
-        if (authentication==null){
-            throw new MyException("请先登录");
-        }
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        if (authorities.contains("ROLE_ADMIN")){
-//
-//        }
-        String username = authentication.getName();
-        String authority = articleServiceImp.getAuthority(username);
-        if (authority.equals("ROLE_ADMIN")){
-            ArrayList<String> sorts = new ArrayList<>();
-            sorts.add("Notices");
-            sorts.add("Activities");
-            HashMap<String, List<String>> map = new HashMap<>();
-            map.put("label",sorts);
-            return ResultUtils.success(map);
-        }else {
-            ArrayList<String> sorts = new ArrayList<>();
-            sorts.add("Javascript");
-            sorts.add("java");
-            sorts.add("php");
-            sorts.add("前端");
-            sorts.add("c/c++");
-            HashMap<String, List<String>> map = new HashMap<>();
-            map.put("label",sorts);
-            return ResultUtils.success(map);
-        }
+    public ResultUtils getLabel(HttpServletRequest request){
+
+        Integer userId = null;
+
+        userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
+        Map<String, List<String>> label = articleServiceImp.getLabel(3);
+
+        return ResultUtils.success(label);
     }
 
     @ResponseBody
     @GetMapping("/article/msg/{id}")
     public ResultUtils getDetailMsgOfArticleByArticleId(@PathVariable("id") String id){
 
-        if (Integer.parseInt(id)<=0){
-            throw new MyException("文章id不存在");
+        if (Integer.parseInt(id)<=0|| id==null||id==""){
+            throw new MyException("文章id格式异常");
         }
+
         UserAndArticleAndCommentsVo detailMsgOfArticleByArticleId = articleServiceImp.getDetailMsgOfArticleByArticleId(Integer.parseInt(id));
         return ResultUtils.success(detailMsgOfArticleByArticleId);
     }
 
     @ResponseBody
     @DeleteMapping("/article")
-    public ResultUtils deleteArticlesByUser(@RequestBody List<Integer> delArticle,Authentication authentication){
-        if (authentication==null){
-            throw new MyException("请先登录");
-        }
+    public ResultUtils deleteArticlesByUser(@RequestBody List<Integer> delArticle,HttpServletRequest request){
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
-        if (authorities.contains("ROLE_ADMIN")){
-            if (delArticle.size()==0){
-                throw new MyException("没有选择公告");
-            }
-
-            if (delArticle==null){
-                throw new MyException("没有选择公告");
-            }
-
-            articleServiceImp.deleteNoticesByAdmin(delArticle,authentication.getName());
-            return ResultUtils.success();
-        }
-
-        if (delArticle.size()==0){
-            throw new MyException("没有选择文章");
-        }
-
-        if (delArticle==null){
-            throw new MyException("没有选择文章");
-        }
-
-        articleServiceImp.deleteArticlesByUser(delArticle,authentication.getName());
+        articleServiceImp.deleteArticlesByUser(delArticle,userId);
         return ResultUtils.success();
     }
 
     @ResponseBody
     @PutMapping("/article")
-    public ResultUtils putArticlesByself(@RequestBody JSONObject jsonObject,Authentication authentication){
+    public ResultUtils putArticlesByUser(@RequestBody JSONObject jsonObject,HttpServletRequest request){
 
-        if (authentication==null){
-            throw new MyException("请先登录");
-        }
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Integer userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
         String articleId = jsonObject.getString("articleId");
         String authorId = jsonObject.getString("authorId");
@@ -154,22 +111,60 @@ public class ArticleController {
         String title = jsonObject.getString("title");
         String label = jsonObject.getString("label");
 
-        if (authorities.contains("ROLE_ADMIN")){
-            Integer count = articleServiceImp.putNoticesByAdmin(authorId, articleId, text, title, label);
-            if (count==0){
-                return ResultUtils.failure(101);
-            }else  {
-                return ResultUtils.success();
-            }
+        if (userId != Integer.parseInt(authorId)) {
+            throw new MyException("用户id与当前登录id不符");
         }
 
-        Integer count = articleServiceImp.putArticlesByUser(authorId, articleId, text, title, label);
+        articleServiceImp.putArticlesByUser(authorId, articleId, text, title, label);
 
-        if (count==0){
-            return ResultUtils.failure(101);
-        }else  {
-            return ResultUtils.success();
-        }
+        return ResultUtils.success();
 
     }
+
+    @ResponseBody
+    @PostMapping("/article")
+    public ResultUtils postArticleByUser(@RequestParam("authorId") String authorId, @RequestParam("label") List<String> label,
+                                         @RequestParam("text") String text, @RequestParam("title") String title,
+                                         @RequestParam("summary") String summary, MultipartFile file,HttpServletRequest request){
+        Integer userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
+        if (userId != Integer.parseInt(authorId)) {
+            throw new MyException("用户id与当前登录id不符");
+        }
+        String coverUrl = MyUtils.uplode(file, FileType.FIGURE);
+        log.info("文件路径为"+coverUrl);
+
+        articleServiceImp.postArticleByUser(Integer.parseInt(authorId), label, text, title, summary, coverUrl);
+
+        return ResultUtils.success();
+    }
+
+    @ResponseBody
+    @PostMapping("/upload")
+    public ResultUtils postImage(@RequestParam("articleId") String articleId, MultipartFile file,HttpServletRequest request){
+        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
+        String coverUrl = MyUtils.uplode(file, FileType.FIGURE);
+
+        articleServiceImp.postImage(userId,Integer.parseInt(articleId),coverUrl);
+        return ResultUtils.success();
+    }
+
+    @ResponseBody
+    @PutMapping("/article/likes")
+    public ResultUtils postLikesByUser(@RequestParam("userId")String userId,@RequestParam("articleId")String articleId,
+                                       HttpServletRequest request){
+        int userId2 = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+
+        if (userId2 != Integer.parseInt(userId)) {
+            throw new MyException("用户id与当前登录id不符");
+        }
+
+        articleServiceImp.postLikesByUser(Integer.parseInt(userId),Integer.parseInt(articleId));
+
+        return ResultUtils.success();
+
+    }
+
+
 }

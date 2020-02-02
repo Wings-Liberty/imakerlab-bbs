@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class backContentVo {
+public class BackContentVo {
     String type;
     String content;
 }

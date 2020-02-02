@@ -9,10 +9,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentVo {
-    private String userUsername;
-    private String content;
+public class GetArticlesMsgByTypeVo {
+    private String coverUrl;
+    private String authorName;
+    private String summary;
     @JsonFormat(pattern="yyyy/MM/dd")
-    private Date commentTime;
-    private String figureUrl;
+    private Date releaseTime;
+    private Integer likes;
+    private Integer views;
+    private String title;
+    private String label;
 }
