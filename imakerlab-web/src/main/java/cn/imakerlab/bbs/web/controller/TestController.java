@@ -30,6 +30,8 @@ import java.util.List;
 @Controller
 public class TestController {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     TestServiceImp service;
 

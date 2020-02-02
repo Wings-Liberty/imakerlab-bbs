@@ -29,3 +29,5 @@ mybatis:
 pagehelper:
   reasonable: true
 
+  supportMethodsArguments: true
+  pageSizeZero: false #pageSize=0

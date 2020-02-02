@@ -6,7 +6,6 @@ import cn.imakerlab.bbs.model.po.ContributionMap;
 import cn.imakerlab.bbs.model.po.ContributionMapExample;
 import cn.imakerlab.bbs.service.ContributionMapService;
 import cn.imakerlab.bbs.utils.MyUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 @Service
 public class ContributionMapServiceImp implements ContributionMapService {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     ContributionMapDao contributionMapDao;

@@ -2,7 +2,7 @@ package cn.imakerlab.bbs.properties;
 
 public class FileProperties {
 
-    private String figureFolderUrl = "D:/IDEA-workspace/imakerlab-bbs/uploadfile";
+    private String figureFolderUrl = "E:\\temperoral";
 
     private long figureMaxSize = 1024*1024;
 
