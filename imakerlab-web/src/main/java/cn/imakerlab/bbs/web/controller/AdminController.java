@@ -8,6 +8,7 @@ import cn.imakerlab.bbs.service.Imp.UserServiceImp;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
