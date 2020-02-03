@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAndArticleAndCommentsVo {
+public class ArticleWithComments {
     private String authorName;
     private String figureUrl;
     private Integer articleId;

@@ -53,6 +53,18 @@ public class ResultUtils<T> {
         return resultUtils;
     }
 
+    public static ResultUtils failure(Integer code,String msg) {
+
+        ResultUtils resultUtils = new ResultUtils();
+        resultUtils.setCode(code);
+        resultUtils.setMsg(msg);
+        resultUtils.setData("");
+
+        return resultUtils;
+    }
+
+
+
     public Integer getCode() {
         return code;
     }

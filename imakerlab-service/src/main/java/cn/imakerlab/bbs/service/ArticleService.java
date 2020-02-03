@@ -2,17 +2,17 @@ package cn.imakerlab.bbs.service;
 
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.vo.BackContentVo;
-import cn.imakerlab.bbs.model.vo.GetArticlesMsgByTypeVo;
-import cn.imakerlab.bbs.model.vo.UserAndArticleAndCommentsVo;
+import cn.imakerlab.bbs.model.vo.ArticleVo;
+import cn.imakerlab.bbs.model.vo.ArticleWithComments;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ArticleService {
-    List<GetArticlesMsgByTypeVo> getArticlesMsgByType(String type);
+    List<ArticleVo> getArticlesMsgByType(String type);
     List<BackContentVo> searchMsgByKey(String key);
 
-    UserAndArticleAndCommentsVo getDetailMsgOfArticleByArticleId(Integer id);
+    ArticleWithComments getDetailMsgOfArticleByArticleId(Integer id);
     void deleteArticlesByUser(List<Integer> delArticleIdList,Integer userId);
 //    void deleteNoticesByAdmin(List<Intvodieger> noticeList,String adminName);
     void putArticlesByUser(String authorId,String articleId,String text,String title,String label);
