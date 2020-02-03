@@ -33,6 +33,16 @@ public class ResultUtils<T> {
         return resultUtils;
     }
 
+    public static ResultUtils success(Object data){
+
+        ResultUtils resultUtils = new ResultUtils();
+        resultUtils.setCode(HttpStatus.OK.value());
+        resultUtils.setMsg("成功");
+        resultUtils.setData(data);
+
+        return resultUtils;
+    }
+
     public static ResultUtils failure(Integer code) {
 
         ResultUtils resultUtils = new ResultUtils();

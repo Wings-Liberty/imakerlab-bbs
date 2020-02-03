@@ -9,6 +9,7 @@ import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class TestController {
 
@@ -59,11 +61,11 @@ public class TestController {
         //要想获取带有自定义属性的对象，需要使用以下语句
         String header = request.getHeader("Authorization");
 
-        logger.info("header : " + header);
+        log.info("header : " + header);
 
         //这里的Bearer不能忽略大小写
         String token = StringUtils.substringAfter(header, "Bearer ");
-        logger.info("token : " + token);
+        log.info("token : " + token);
 
         Claims claims = Jwts.parser().setSigningKey("cx".getBytes("UTF-8"))
                 .parseClaimsJws(token).getBody();

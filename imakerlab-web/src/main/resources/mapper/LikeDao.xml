@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.imakerlab.bbs.mapper.ContributionMapDao">
-  <resultMap id="BaseResultMap" type="cn.imakerlab.bbs.model.po.ContributionMap">
-    <id column="contribution_map_id" jdbcType="INTEGER" property="id" />
-    <result column="contribution_map_year" jdbcType="INTEGER" property="year" />
-    <result column="contribution_map_week" jdbcType="INTEGER" property="week" />
-    <result column="contribution_map_user_id" jdbcType="INTEGER" property="userId" />
-    <result column="contribution_map_num" jdbcType="INTEGER" property="num" />
+<mapper namespace="cn.imakerlab.bbs.mapper.LikeDao">
+  <resultMap id="BaseResultMap" type="cn.imakerlab.bbs.model.po.Like">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="article_id" jdbcType="INTEGER" property="articleId" />
+    <result column="is_like" jdbcType="TINYINT" property="isLike" />
+    <result column="is_collected" jdbcType="TINYINT" property="isCollected" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,17 +67,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    contribution_map.id as contribution_map_id, contribution_map.`year` as `contribution_map_year`, 
-    contribution_map.week as contribution_map_week, contribution_map.user_id as contribution_map_user_id, 
-    contribution_map.num as contribution_map_num
+    id, user_id, article_id, is_like, is_collected
   </sql>
-  <select id="selectByExample" parameterType="cn.imakerlab.bbs.model.po.ContributionMapExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="cn.imakerlab.bbs.model.po.LikeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from contribution_map contribution_map
+    from like
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -88,79 +86,79 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from contribution_map contribution_map
-    where contribution_map.id = #{id,jdbcType=INTEGER}
+    from like
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from contribution_map
+    delete from like
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="cn.imakerlab.bbs.model.po.ContributionMapExample">
-    delete from contribution_map contribution_map
+  <delete id="deleteByExample" parameterType="cn.imakerlab.bbs.model.po.LikeExample">
+    delete from like
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.po.ContributionMap" useGeneratedKeys="true">
-    insert into contribution_map (`year`, week, user_id, 
-      num)
-    values (#{year,jdbcType=INTEGER}, #{week,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
-      #{num,jdbcType=INTEGER})
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.po.Like" useGeneratedKeys="true">
+    insert into like (user_id, article_id, is_like, 
+      is_collected)
+    values (#{userId,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER}, #{isLike,jdbcType=TINYINT}, 
+      #{isCollected,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.po.ContributionMap" useGeneratedKeys="true">
-    insert into contribution_map
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.po.Like" useGeneratedKeys="true">
+    insert into like
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="year != null">
-        `year`,
-      </if>
-      <if test="week != null">
-        week,
-      </if>
       <if test="userId != null">
         user_id,
       </if>
-      <if test="num != null">
-        num,
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="isLike != null">
+        is_like,
+      </if>
+      <if test="isCollected != null">
+        is_collected,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="year != null">
-        #{year,jdbcType=INTEGER},
-      </if>
-      <if test="week != null">
-        #{week,jdbcType=INTEGER},
-      </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="num != null">
-        #{num,jdbcType=INTEGER},
+      <if test="articleId != null">
+        #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="isLike != null">
+        #{isLike,jdbcType=TINYINT},
+      </if>
+      <if test="isCollected != null">
+        #{isCollected,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="cn.imakerlab.bbs.model.po.ContributionMapExample" resultType="java.lang.Long">
-    select count(*) from contribution_map contribution_map
+  <select id="countByExample" parameterType="cn.imakerlab.bbs.model.po.LikeExample" resultType="java.lang.Long">
+    select count(*) from like
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update contribution_map contribution_map
+    update like
     <set>
       <if test="record.id != null">
-        contribution_map.id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.year != null">
-        contribution_map.`year` = #{record.year,jdbcType=INTEGER},
-      </if>
-      <if test="record.week != null">
-        contribution_map.week = #{record.week,jdbcType=INTEGER},
+        id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.userId != null">
-        contribution_map.user_id = #{record.userId,jdbcType=INTEGER},
+        user_id = #{record.userId,jdbcType=INTEGER},
       </if>
-      <if test="record.num != null">
-        contribution_map.num = #{record.num,jdbcType=INTEGER},
+      <if test="record.articleId != null">
+        article_id = #{record.articleId,jdbcType=INTEGER},
+      </if>
+      <if test="record.isLike != null">
+        is_like = #{record.isLike,jdbcType=TINYINT},
+      </if>
+      <if test="record.isCollected != null">
+        is_collected = #{record.isCollected,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -168,40 +166,40 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update contribution_map contribution_map
-    set contribution_map.id = #{record.id,jdbcType=INTEGER},
-      contribution_map.`year` = #{record.year,jdbcType=INTEGER},
-      contribution_map.week = #{record.week,jdbcType=INTEGER},
-      contribution_map.user_id = #{record.userId,jdbcType=INTEGER},
-      contribution_map.num = #{record.num,jdbcType=INTEGER}
+    update like
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      article_id = #{record.articleId,jdbcType=INTEGER},
+      is_like = #{record.isLike,jdbcType=TINYINT},
+      is_collected = #{record.isCollected,jdbcType=TINYINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.imakerlab.bbs.model.po.ContributionMap">
-    update contribution_map
+  <update id="updateByPrimaryKeySelective" parameterType="cn.imakerlab.bbs.model.po.Like">
+    update like
     <set>
-      <if test="year != null">
-        `year` = #{year,jdbcType=INTEGER},
-      </if>
-      <if test="week != null">
-        week = #{week,jdbcType=INTEGER},
-      </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="num != null">
-        num = #{num,jdbcType=INTEGER},
+      <if test="articleId != null">
+        article_id = #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="isLike != null">
+        is_like = #{isLike,jdbcType=TINYINT},
+      </if>
+      <if test="isCollected != null">
+        is_collected = #{isCollected,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.imakerlab.bbs.model.po.ContributionMap">
-    update contribution_map
-    set `year` = #{year,jdbcType=INTEGER},
-      week = #{week,jdbcType=INTEGER},
-      user_id = #{userId,jdbcType=INTEGER},
-      num = #{num,jdbcType=INTEGER}
+  <update id="updateByPrimaryKey" parameterType="cn.imakerlab.bbs.model.po.Like">
+    update like
+    set user_id = #{userId,jdbcType=INTEGER},
+      article_id = #{articleId,jdbcType=INTEGER},
+      is_like = #{isLike,jdbcType=TINYINT},
+      is_collected = #{isCollected,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

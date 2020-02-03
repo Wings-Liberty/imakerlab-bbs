@@ -30,4 +30,9 @@ public class test {
     public void testAuto(){
     }
 
+    @Test
+    public void test(){
+        Class c = User.class;
+    }
+
 }

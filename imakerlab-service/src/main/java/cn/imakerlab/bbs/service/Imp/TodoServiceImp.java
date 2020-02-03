@@ -4,12 +4,14 @@ import cn.imakerlab.bbs.mapper.TodoDao;
 import cn.imakerlab.bbs.model.po.Todo;
 import cn.imakerlab.bbs.model.po.TodoExample;
 import cn.imakerlab.bbs.service.TodoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
 @Service
 public class TodoServiceImp implements TodoService {

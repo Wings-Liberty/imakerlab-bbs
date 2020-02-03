@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 @Configuration
 public class getTokenAspect {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Around("execution(public * org.springframework.security.oauth2.provider.endpoint.TokenEndpoint.postAccessToken(..))")
     public Object method(ProceedingJoinPoint pjp) throws Throwable {
 

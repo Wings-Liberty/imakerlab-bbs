@@ -23,6 +23,8 @@ public class SecurityUtils {
                     .parseClaimsJws(token).getBody();
         } catch (UnsupportedEncodingException e) {
             throw new MyException("security模块的工具类抛出的UnsupportedEncodingException");
+        } catch (IllegalArgumentException e){
+            throw new MyException("账号未登录或账号信息过期，请先登录");
         }
 
         System.out.println("claims : " + claims);

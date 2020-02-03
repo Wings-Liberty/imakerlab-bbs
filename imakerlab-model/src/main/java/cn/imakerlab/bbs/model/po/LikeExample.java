@@ -3,14 +3,14 @@ package cn.imakerlab.bbs.model.po;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContributionMapExample {
+public class LikeExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public ContributionMapExample() {
+    public LikeExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -105,302 +105,302 @@ public class ContributionMapExample {
         }
 
         public Criteria andIdIsNull() {
-            addCriterion("contribution_map.id is null");
+            addCriterion("id is null");
             return (Criteria) this;
         }
 
         public Criteria andIdIsNotNull() {
-            addCriterion("contribution_map.id is not null");
+            addCriterion("id is not null");
             return (Criteria) this;
         }
 
         public Criteria andIdEqualTo(Integer value) {
-            addCriterion("contribution_map.id =", value, "id");
+            addCriterion("id =", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdNotEqualTo(Integer value) {
-            addCriterion("contribution_map.id <>", value, "id");
+            addCriterion("id <>", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdGreaterThan(Integer value) {
-            addCriterion("contribution_map.id >", value, "id");
+            addCriterion("id >", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.id >=", value, "id");
+            addCriterion("id >=", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdLessThan(Integer value) {
-            addCriterion("contribution_map.id <", value, "id");
+            addCriterion("id <", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.id <=", value, "id");
+            addCriterion("id <=", value, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdIn(List<Integer> values) {
-            addCriterion("contribution_map.id in", values, "id");
+            addCriterion("id in", values, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdNotIn(List<Integer> values) {
-            addCriterion("contribution_map.id not in", values, "id");
+            addCriterion("id not in", values, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.id between", value1, value2, "id");
+            addCriterion("id between", value1, value2, "id");
             return (Criteria) this;
         }
 
         public Criteria andIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.id not between", value1, value2, "id");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearIsNull() {
-            addCriterion("contribution_map.`year` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearIsNotNull() {
-            addCriterion("contribution_map.`year` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` =", value, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearNotEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` <>", value, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearGreaterThan(Integer value) {
-            addCriterion("contribution_map.`year` >", value, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` >=", value, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearLessThan(Integer value) {
-            addCriterion("contribution_map.`year` <", value, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.`year` <=", value, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearIn(List<Integer> values) {
-            addCriterion("contribution_map.`year` in", values, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearNotIn(List<Integer> values) {
-            addCriterion("contribution_map.`year` not in", values, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.`year` between", value1, value2, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.`year` not between", value1, value2, "year");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekIsNull() {
-            addCriterion("contribution_map.week is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekIsNotNull() {
-            addCriterion("contribution_map.week is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekEqualTo(Integer value) {
-            addCriterion("contribution_map.week =", value, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekNotEqualTo(Integer value) {
-            addCriterion("contribution_map.week <>", value, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekGreaterThan(Integer value) {
-            addCriterion("contribution_map.week >", value, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.week >=", value, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekLessThan(Integer value) {
-            addCriterion("contribution_map.week <", value, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.week <=", value, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekIn(List<Integer> values) {
-            addCriterion("contribution_map.week in", values, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekNotIn(List<Integer> values) {
-            addCriterion("contribution_map.week not in", values, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.week between", value1, value2, "week");
-            return (Criteria) this;
-        }
-
-        public Criteria andWeekNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.week not between", value1, value2, "week");
+            addCriterion("id not between", value1, value2, "id");
             return (Criteria) this;
         }
 
         public Criteria andUserIdIsNull() {
-            addCriterion("contribution_map.user_id is null");
+            addCriterion("user_id is null");
             return (Criteria) this;
         }
 
         public Criteria andUserIdIsNotNull() {
-            addCriterion("contribution_map.user_id is not null");
+            addCriterion("user_id is not null");
             return (Criteria) this;
         }
 
         public Criteria andUserIdEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id =", value, "userId");
+            addCriterion("user_id =", value, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdNotEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id <>", value, "userId");
+            addCriterion("user_id <>", value, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdGreaterThan(Integer value) {
-            addCriterion("contribution_map.user_id >", value, "userId");
+            addCriterion("user_id >", value, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id >=", value, "userId");
+            addCriterion("user_id >=", value, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdLessThan(Integer value) {
-            addCriterion("contribution_map.user_id <", value, "userId");
+            addCriterion("user_id <", value, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.user_id <=", value, "userId");
+            addCriterion("user_id <=", value, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdIn(List<Integer> values) {
-            addCriterion("contribution_map.user_id in", values, "userId");
+            addCriterion("user_id in", values, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdNotIn(List<Integer> values) {
-            addCriterion("contribution_map.user_id not in", values, "userId");
+            addCriterion("user_id not in", values, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.user_id between", value1, value2, "userId");
+            addCriterion("user_id between", value1, value2, "userId");
             return (Criteria) this;
         }
 
         public Criteria andUserIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.user_id not between", value1, value2, "userId");
+            addCriterion("user_id not between", value1, value2, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andNumIsNull() {
-            addCriterion("contribution_map.num is null");
+        public Criteria andArticleIdIsNull() {
+            addCriterion("article_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andNumIsNotNull() {
-            addCriterion("contribution_map.num is not null");
+        public Criteria andArticleIdIsNotNull() {
+            addCriterion("article_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNumEqualTo(Integer value) {
-            addCriterion("contribution_map.num =", value, "num");
+        public Criteria andArticleIdEqualTo(Integer value) {
+            addCriterion("article_id =", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumNotEqualTo(Integer value) {
-            addCriterion("contribution_map.num <>", value, "num");
+        public Criteria andArticleIdNotEqualTo(Integer value) {
+            addCriterion("article_id <>", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumGreaterThan(Integer value) {
-            addCriterion("contribution_map.num >", value, "num");
+        public Criteria andArticleIdGreaterThan(Integer value) {
+            addCriterion("article_id >", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumGreaterThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.num >=", value, "num");
+        public Criteria andArticleIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("article_id >=", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumLessThan(Integer value) {
-            addCriterion("contribution_map.num <", value, "num");
+        public Criteria andArticleIdLessThan(Integer value) {
+            addCriterion("article_id <", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumLessThanOrEqualTo(Integer value) {
-            addCriterion("contribution_map.num <=", value, "num");
+        public Criteria andArticleIdLessThanOrEqualTo(Integer value) {
+            addCriterion("article_id <=", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumIn(List<Integer> values) {
-            addCriterion("contribution_map.num in", values, "num");
+        public Criteria andArticleIdIn(List<Integer> values) {
+            addCriterion("article_id in", values, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumNotIn(List<Integer> values) {
-            addCriterion("contribution_map.num not in", values, "num");
+        public Criteria andArticleIdNotIn(List<Integer> values) {
+            addCriterion("article_id not in", values, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.num between", value1, value2, "num");
+        public Criteria andArticleIdBetween(Integer value1, Integer value2) {
+            addCriterion("article_id between", value1, value2, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andNumNotBetween(Integer value1, Integer value2) {
-            addCriterion("contribution_map.num not between", value1, value2, "num");
+        public Criteria andArticleIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("article_id not between", value1, value2, "articleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeIsNull() {
+            addCriterion("is_like is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeIsNotNull() {
+            addCriterion("is_like is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeEqualTo(Byte value) {
+            addCriterion("is_like =", value, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeNotEqualTo(Byte value) {
+            addCriterion("is_like <>", value, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeGreaterThan(Byte value) {
+            addCriterion("is_like >", value, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("is_like >=", value, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeLessThan(Byte value) {
+            addCriterion("is_like <", value, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeLessThanOrEqualTo(Byte value) {
+            addCriterion("is_like <=", value, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeIn(List<Byte> values) {
+            addCriterion("is_like in", values, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeNotIn(List<Byte> values) {
+            addCriterion("is_like not in", values, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeBetween(Byte value1, Byte value2) {
+            addCriterion("is_like between", value1, value2, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLikeNotBetween(Byte value1, Byte value2) {
+            addCriterion("is_like not between", value1, value2, "isLike");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedIsNull() {
+            addCriterion("is_collected is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedIsNotNull() {
+            addCriterion("is_collected is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedEqualTo(Byte value) {
+            addCriterion("is_collected =", value, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedNotEqualTo(Byte value) {
+            addCriterion("is_collected <>", value, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedGreaterThan(Byte value) {
+            addCriterion("is_collected >", value, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedGreaterThanOrEqualTo(Byte value) {
+            addCriterion("is_collected >=", value, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedLessThan(Byte value) {
+            addCriterion("is_collected <", value, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedLessThanOrEqualTo(Byte value) {
+            addCriterion("is_collected <=", value, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedIn(List<Byte> values) {
+            addCriterion("is_collected in", values, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedNotIn(List<Byte> values) {
+            addCriterion("is_collected not in", values, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedBetween(Byte value1, Byte value2) {
+            addCriterion("is_collected between", value1, value2, "isCollected");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCollectedNotBetween(Byte value1, Byte value2) {
+            addCriterion("is_collected not between", value1, value2, "isCollected");
             return (Criteria) this;
         }
     }
