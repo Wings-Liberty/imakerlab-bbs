@@ -1,24 +1,16 @@
 package cn.imakerlab.bbs.utils;
 
 import cn.imakerlab.bbs.constant.ErrorConstant;
-import cn.imakerlab.bbs.constant.FileType;
+import cn.imakerlab.bbs.constant.FileUploadEnum;
 import cn.imakerlab.bbs.model.exception.MyException;
-import cn.imakerlab.bbs.properties.ConfigProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 public class MyUtils {
-
-    private static ConfigProperties configProperties = new ConfigProperties();
-//    @Autowired
-//    private static ConfigProperties configProperties;
 
     public static <T> T ListToOne(List<T> list) {
 
@@ -34,20 +26,24 @@ public class MyUtils {
 
     }
 
-    public static String uplode(MultipartFile file, FileType fileType) {
+    public static String uplode(MultipartFile file, FileUploadEnum fileUploadEnum) {
+
+        //判断文件是否符合该文件形式下的文件大小限制
 
         if (file.isEmpty()) {
             throw new MyException(ErrorConstant.File.FILE_IS_EMPTY);
         }
 
-        if(file.getSize() > configProperties.getFile().getFigureMaxSize()){
+        if(file.getSize() > fileUploadEnum.getMaxSize()){
             throw new MyException(ErrorConstant.File.FILE_SIZE_EXCEEDS);
         }
+
+        //符合标准后，上传文件
+
         // 获取文件名
         String fileName = UUID.randomUUID().toString() + file.getOriginalFilename();
 
-        String basePath = configProperties.getFile().getFigureFolderUrl();
-        System.out.println(basePath);
+        String basePath = fileUploadEnum.getUploadUrl();
 
         //判断路径是否存在，文件夹
         File uploadFile = new File(basePath);
@@ -55,7 +51,7 @@ public class MyUtils {
 
             uploadFile.mkdirs();
         }
-        //使用 MulitpartFile 接口中方法，把上传的文件写到指定位置
+        //把file文件以指定文件名传到指定位置
         try {
             file.transferTo(new File(uploadFile, fileName));
         } catch (IOException e) {

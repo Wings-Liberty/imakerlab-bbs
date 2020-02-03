@@ -2,10 +2,9 @@ package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.constant.DefaultConstant;
 import cn.imakerlab.bbs.constant.ErrorConstant;
-import cn.imakerlab.bbs.constant.FileType;
+import cn.imakerlab.bbs.constant.FileUploadEnum;
 import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.po.ContributionMap;
-import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.vo.UserVo;
 import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.ContributionMapServiceImp;
@@ -16,14 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,22 +149,11 @@ public class UserController {
 
         int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
-//        暂时无法注销jwt，所以先不把登录的用户放进usersMap
-//        String username = authentication.getName();
-//        if (UsersUtils.usersMap.containsKey(username)) {
-//            logger.info("从userMap中获取user");
-//            return ResultUtils.success().setData(UsersUtils.usersMap.get(username));
-//        } else {
-//            logger.info("从数据库获取user，并将该user存入UserUtils的usersMap");
-//            User user = userService.getUserByAuthentication(authentication);
-//            UsersUtils.usersMap.put(username, user);
-//            return ResultUtils.success().setData(user);
-//        }
-
         log.info("从数据库获取user");
         UserVo userVo = userService.getUserVoById(userId);
         return ResultUtils.success().setData(userVo);
     }
+
 
 
     @GetMapping("/user/{id}")
@@ -211,7 +197,7 @@ public class UserController {
         int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
         //上传头像
-        String figureUrl = MyUtils.uplode(file, FileType.FIGURE);
+        String figureUrl = MyUtils.uplode(file, FileUploadEnum.FIGURE);
         log.info("id为" + userId + "的用户:" + "把头像保存在" + figureUrl);
 
         //把头像的url存入数据库
