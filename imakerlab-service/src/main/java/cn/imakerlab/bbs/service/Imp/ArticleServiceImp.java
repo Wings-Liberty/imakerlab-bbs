@@ -1,5 +1,6 @@
 package cn.imakerlab.bbs.service.Imp;
 
+import cn.imakerlab.bbs.enums.ArticleTypeEnum;
 import cn.imakerlab.bbs.mapper.ArticleDao;
 import cn.imakerlab.bbs.mapper.CommentDao;
 import cn.imakerlab.bbs.mapper.LikeDao;
@@ -9,11 +10,10 @@ import cn.imakerlab.bbs.model.po.*;
 
 import cn.imakerlab.bbs.model.vo.BackContentVo;
 import cn.imakerlab.bbs.model.vo.CommentVo;
-import cn.imakerlab.bbs.model.vo.GetArticlesMsgByTypeVo;
-import cn.imakerlab.bbs.model.vo.UserAndArticleAndCommentsVo;
+import cn.imakerlab.bbs.model.vo.ArticleVo;
+import cn.imakerlab.bbs.model.vo.ArticleWithComments;
 
 import cn.imakerlab.bbs.service.ArticleService;
-import cn.imakerlab.bbs.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,54 +37,28 @@ public class ArticleServiceImp implements ArticleService {
 
     //通过类型查询文章信息
     @Override
-    public List<GetArticlesMsgByTypeVo> getArticlesMsgByType(String type) {
+    public List<ArticleVo> getArticlesMsgByType(ArticleTypeEnum articleTypeEnum) {
 
         ArticleExample articleExample = new ArticleExample();
         ArticleExample.Criteria criteria = articleExample.createCriteria();
 
-        if (type == null||type == "") {
+        articleExample.setOrderByClause(articleTypeEnum.getSort());
 
-            articleExample.setOrderByClause("release_time DESC");
-        } else if (type.equals("favor")) {
-
-            articleExample.setOrderByClause("likes DESC");
-        } else if (type.equals("time")) {
-
-            articleExample.setOrderByClause("release_time DESC");
-        } else if (type.equals("question")) {
-
-            articleExample.setOrderByClause("release_time DESC");
-            criteria.andTypeEqualTo("question");
-        } else if (type.equals("activity")) {
-
-            articleExample.setOrderByClause("release_time DESC");
-            criteria.andTypeEqualTo("activity");
-        } else {
-
-            articleExample.setOrderByClause("release_time DESC");
+        if (articleTypeEnum==ArticleTypeEnum.QUESTION||articleTypeEnum==ArticleTypeEnum.ACTIVITY) {
+            criteria.andTypeEqualTo(articleTypeEnum.getType());
         }
 
         List<Article> articles = articleDao.selectByExample(articleExample);
 
-        List<GetArticlesMsgByTypeVo> getArticlesMsgByTypeVos = new ArrayList<>();
+        List<ArticleVo> articleVos = new ArrayList<>();
 
         for (Article article : articles) {
-            GetArticlesMsgByTypeVo getArticlesMsgByTypeVo = new GetArticlesMsgByTypeVo();
-
-            getArticlesMsgByTypeVo.setAuthorName(article.getAuthorName());
-            getArticlesMsgByTypeVo.setCoverUrl(article.getCoverUrl());
-            getArticlesMsgByTypeVo.setLabel(article.getLabel());
-            getArticlesMsgByTypeVo.setLikes(article.getLikes());
-            getArticlesMsgByTypeVo.setReleaseTime(article.getReleaseTime());
-            getArticlesMsgByTypeVo.setTitle(article.getTitle());
-            getArticlesMsgByTypeVo.setViews(article.getViews());
-            getArticlesMsgByTypeVo.setSummary(article.getSummary());
-
-            getArticlesMsgByTypeVos.add(getArticlesMsgByTypeVo);
+            ArticleVo articleVo = new ArticleVo(article);
+            articleVos.add(articleVo);
         }
 
         log.info("下拉刷新查找文章信息成功");
-        return getArticlesMsgByTypeVos;
+        return articleVos;
     }
 
 
@@ -187,9 +161,12 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public UserAndArticleAndCommentsVo getDetailMsgOfArticleByArticleId(Integer id) {
+    public ArticleWithComments getDetailMsgOfArticleByArticleId(Integer id) {
 
         Article article = articleDao.selectByPrimaryKey(id);
+        if (article.getIsDeleted() == '0') {
+            return null;
+        }
 
         Integer authorId = article.getAuthorId();
         User user = userDao.selectByPrimaryKey(authorId);
@@ -202,21 +179,23 @@ public class ArticleServiceImp implements ArticleService {
         ArrayList<CommentVo> commentVos = new ArrayList<>();
 
         for (Comment comment : comments) {
-            commentVos.add(new CommentVo(comment.getUserUsername(), comment.getContent(),
-                    comment.getCommentTime(), userDao.selectByPrimaryKey(comment.getUserId()).getFigureUrl()));
+            commentVos.add(new CommentVo(comment.getUserUsername(),
+                                         comment.getContent(),
+                                         comment.getCommentTime(),
+                                         userDao.selectByPrimaryKey(comment.getUserId()).getFigureUrl()));
         }
 
-        UserAndArticleAndCommentsVo userAndArticleAndCommentsVo = new UserAndArticleAndCommentsVo();
-        userAndArticleAndCommentsVo.setArticleId(id);
-        userAndArticleAndCommentsVo.setAuthorName(user.getUsername());
-        userAndArticleAndCommentsVo.setFigureUrl(user.getFigureUrl());
-        userAndArticleAndCommentsVo.setLabel(article.getLabel());
-        userAndArticleAndCommentsVo.setLikes(article.getLikes());
-        userAndArticleAndCommentsVo.setText(article.getText());
-        userAndArticleAndCommentsVo.setViews(article.getViews().toString());
-        userAndArticleAndCommentsVo.setTalkList(commentVos);
+        ArticleWithComments articleWithComments = new ArticleWithComments(
+                user.getUsername(),
+                user.getFigureUrl(),
+                id,article.getLikes(),
+                article.getViews().toString(),
+                article.getText(),
+                article.getLabel(),
+                commentVos
+        );
 
-        return userAndArticleAndCommentsVo;
+        return articleWithComments;
 
     }
 
@@ -373,7 +352,6 @@ public class ArticleServiceImp implements ArticleService {
         article.setIsDeleted(Byte.parseByte("0"));
         article.setType("question");
         Integer count = articleDao.insertSelective(article);
-
         if (count==0){
             throw new MyException("添加文章失败");
         }
