@@ -45,9 +45,15 @@ public class MyUserDetailsService implements UserDetailsService {
 
         String password = user.getPassword();
 
+        boolean enable = false;
+        if(user.getIsDeleted() == 0){
+            enable = true;
+        }
+
         return new User(
                 username,
                 password,
+                enable, true, true, true,
                 AuthorityUtils.commaSeparatedStringToAuthorityList(user.getAuthority()));
     }
 }

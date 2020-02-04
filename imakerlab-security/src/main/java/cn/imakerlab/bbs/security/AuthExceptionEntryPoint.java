@@ -23,7 +23,7 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException authException)
             throws ServletException {
 
-        Map map = new HashMap();
+        Map<String,String> map = new HashMap<>();
         map.put("code", "100");
 
         if(authException.getMessage().contains(ErrorConstant.Token.TOKEN_IS_EXPIRED)){

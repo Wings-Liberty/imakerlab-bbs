@@ -61,10 +61,6 @@ public class AdminController {
             throw new MyException("delList是空的");
         }
 
-        for(Integer i : delList){
-            System.out.println(i);
-        }
-
         userService.deleteUserByList(delList);
 
         return ResultUtils.success();
