@@ -3,9 +3,12 @@ package cn.imakerlab.bbs.mapper;
 import cn.imakerlab.bbs.model.po.Comment;
 import cn.imakerlab.bbs.model.po.CommentExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+@Mapper
 @Repository
 public interface CommentDao {
     long countByExample(CommentExample example);

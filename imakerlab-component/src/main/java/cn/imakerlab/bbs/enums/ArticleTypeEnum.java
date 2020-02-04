@@ -14,13 +14,22 @@ public enum ArticleTypeEnum {
         this.sort=sort;
     }
 
-    public static String getSortByByte(String type) {
+    public static String getSortByType(String type) {
         for (ArticleTypeEnum articleTypeEnum : ArticleTypeEnum.values()) {
             if (articleTypeEnum.getType().equals(type)) {
                 return articleTypeEnum.getSort();
             }
         }
         return "";
+    }
+
+    public static ArticleTypeEnum getArticleTypeEnumByType(String type) {
+        for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
+            if (value.getType() == type) {
+                return value;
+            }
+        }
+        return null;
     }
 
     public String getType() {

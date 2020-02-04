@@ -4,10 +4,13 @@ import cn.imakerlab.bbs.model.po.Like;
 import cn.imakerlab.bbs.model.po.LikeExample;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Mapper
 public interface LikeDao {
     long countByExample(LikeExample example);
 

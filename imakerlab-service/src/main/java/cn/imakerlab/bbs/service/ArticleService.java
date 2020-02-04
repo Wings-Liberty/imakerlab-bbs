@@ -1,5 +1,6 @@
 package cn.imakerlab.bbs.service;
 
+import cn.imakerlab.bbs.enums.ArticleTypeEnum;
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.vo.BackContentVo;
 import cn.imakerlab.bbs.model.vo.ArticleVo;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ArticleService {
-    List<ArticleVo> getArticlesMsgByType(String type);
+    List<ArticleVo> getArticlesMsgByType(ArticleTypeEnum articleTypeEnum);
     List<BackContentVo> searchMsgByKey(String key);
 
     ArticleWithComments getDetailMsgOfArticleByArticleId(Integer id);

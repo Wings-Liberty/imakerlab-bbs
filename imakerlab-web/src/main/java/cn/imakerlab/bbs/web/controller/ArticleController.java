@@ -2,6 +2,7 @@ package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.constant.FileType;
+import cn.imakerlab.bbs.enums.ArticleTypeEnum;
 import cn.imakerlab.bbs.model.exception.MyException;
 
 import cn.imakerlab.bbs.model.vo.BackContentVo;
@@ -17,6 +18,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +39,7 @@ public class ArticleController {
     public ResultUtils getArticlesMsgByType(@PathVariable(value = "type", required = true) String type,
                                             @RequestParam(value = "pn", required = true) Integer pn) {
 
-        List<ArticleVo> articlesMsgByType = articleServiceImp.getArticlesMsgByType(type);
+        List<ArticleVo> articlesMsgByType = articleServiceImp.getArticlesMsgByType(ArticleTypeEnum.getArticleTypeEnumByType(type));
 
         PageHelper.startPage(pn, 5);
         PageInfo<ArticleVo> articlePageInfo = new PageInfo<>(articlesMsgByType);
@@ -48,8 +50,8 @@ public class ArticleController {
 
     @ResponseBody
     @GetMapping("/search")
-    public ResultUtils searchMsgByKey(@RequestParam("key") String key) throws Exception {
-        if (key != null && key != "") {
+    public ResultUtils searchMsgByKey(@RequestParam("key") String key) {
+        if (!StringUtils.isEmpty(key)) {
             List<BackContentVo> backContentVos = articleServiceImp.searchMsgByKey(key);
             if (backContentVos == null || backContentVos.size() == 0) {
                 return ResultUtils.failure(100);
@@ -64,9 +66,7 @@ public class ArticleController {
     @GetMapping("/label")
     public ResultUtils getLabel(HttpServletRequest request) {
 
-        Integer userId = null;
-
-        userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+        Integer userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
         Map<String, List<String>> label = articleServiceImp.getLabel(userId);
 

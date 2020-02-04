@@ -37,30 +37,15 @@ public class ArticleServiceImp implements ArticleService {
 
     //通过类型查询文章信息
     @Override
-    public List<ArticleVo> getArticlesMsgByType(String type) {
+    public List<ArticleVo> getArticlesMsgByType(ArticleTypeEnum articleTypeEnum) {
 
         ArticleExample articleExample = new ArticleExample();
         ArticleExample.Criteria criteria = articleExample.createCriteria();
 
+        articleExample.setOrderByClause(articleTypeEnum.getSort());
 
-
-        switch (type) {
-            case "favor":
-                articleExample.setOrderByClause(ArticleTypeEnum.getSortByByte(type));
-                break;
-            case "time":
-                articleExample.setOrderByClause(ArticleTypeEnum.getSortByByte(type));
-                break;
-            case "question":
-                articleExample.setOrderByClause(ArticleTypeEnum.getSortByByte(type));
-                criteria.andTypeEqualTo(type);
-                break;
-            case "activity":
-                articleExample.setOrderByClause(ArticleTypeEnum.getSortByByte(type));
-                criteria.andTypeEqualTo(type);
-            default:
-                articleExample.setOrderByClause("release_time DESC");
-                break;
+        if (articleTypeEnum==ArticleTypeEnum.QUESTION||articleTypeEnum==ArticleTypeEnum.ACTIVITY) {
+            criteria.andTypeEqualTo(articleTypeEnum.getType());
         }
 
         List<Article> articles = articleDao.selectByExample(articleExample);
@@ -194,8 +179,10 @@ public class ArticleServiceImp implements ArticleService {
         ArrayList<CommentVo> commentVos = new ArrayList<>();
 
         for (Comment comment : comments) {
-            commentVos.add(new CommentVo(comment.getUserUsername(), comment.getContent(),
-                    comment.getCommentTime(), userDao.selectByPrimaryKey(comment.getUserId()).getFigureUrl()));
+            commentVos.add(new CommentVo(comment.getUserUsername(),
+                                         comment.getContent(),
+                                         comment.getCommentTime(),
+                                         userDao.selectByPrimaryKey(comment.getUserId()).getFigureUrl()));
         }
 
         ArticleWithComments articleWithComments = new ArticleWithComments(
