@@ -1,7 +1,8 @@
 package cn.imakerlab.bbs.constant;
 
 public enum FileUploadEnum {
-    FIGURE("figure", 1024*1024, "D:\\IDEA-workspace\\imakerlab-bbs\\uploadfile");
+    FIGURE("figure", 1024*1024, "D:\\IDEA-workspace\\imakerlab-bbs\\uploadfile"),
+    PICTURE("figure", 1024*1024*3, "D:\\IDEA-workspace\\imakerlab-bbs\\uploadfile");
 
     private String value;
     private Integer maxSize;

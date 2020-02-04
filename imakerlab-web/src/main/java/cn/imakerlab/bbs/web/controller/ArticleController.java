@@ -1,13 +1,12 @@
 package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.constant.ErrorConstant;
-import cn.imakerlab.bbs.constant.FileType;
+import cn.imakerlab.bbs.constant.FileUploadEnum;
 import cn.imakerlab.bbs.enums.ArticleTypeEnum;
 import cn.imakerlab.bbs.model.exception.MyException;
-
-import cn.imakerlab.bbs.model.vo.BackContentVo;
 import cn.imakerlab.bbs.model.vo.ArticleVo;
 import cn.imakerlab.bbs.model.vo.ArticleWithComments;
+import cn.imakerlab.bbs.model.vo.BackContentVo;
 import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.ArticleServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
@@ -17,14 +16,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -111,12 +110,6 @@ public class ArticleController {
 
         Integer userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
-        String articleId = jsonObject.getString("articleId");
-        String authorId = jsonObject.getString("authorId");
-        String text = jsonObject.getString("text");
-        String title = jsonObject.getString("title");
-        String label = jsonObject.getString("label");
-
         if (userId != Integer.parseInt(authorId)) {
             throw new MyException("用户id与当前登录id不符");
         }
@@ -129,7 +122,7 @@ public class ArticleController {
 
     @ResponseBody
     @PostMapping("/article")
-    public ResultUtils postArticleByUser(@RequestParam(value = "authorId",required = true) String authorId,
+    public ResultUtils postArticleByUser(@RequestParam(value = "authorId",required = true) Integer authorId,
                                          @RequestParam(value = "label",required = true) List<String> label,
                                          @RequestParam(value = "text",required = true) String text,
                                          @RequestParam(value = "title",required = true) String title,
@@ -137,13 +130,13 @@ public class ArticleController {
                                          MultipartFile file, HttpServletRequest request) {
         Integer userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
-        if (userId != Integer.parseInt(authorId)) {
+        if (userId != authorId) {
             throw new MyException("用户id与当前登录id不符");
         }
-        String coverUrl = MyUtils.uplode(file, FileType.FIGURE);
+        String coverUrl = MyUtils.uplode(file, FileUploadEnum.PICTURE);
         log.info("文件路径为" + coverUrl);
 
-        articleServiceImp.postArticleByUser(Integer.parseInt(authorId), label, text, title, summary, coverUrl);
+        articleServiceImp.postArticleByUser(authorId, label, text, title, summary, coverUrl);
 
         return ResultUtils.success();
     }
@@ -154,7 +147,7 @@ public class ArticleController {
                                  MultipartFile file, HttpServletRequest request) {
         int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
-        String coverUrl = MyUtils.uplode(file, FileType.FIGURE);
+        String coverUrl = MyUtils.uplode(file, FileUploadEnum.PICTURE);
 
         articleServiceImp.postImage(userId, Integer.parseInt(articleId), coverUrl);
         return ResultUtils.success();

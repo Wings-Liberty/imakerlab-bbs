@@ -38,7 +38,7 @@ public class Comment implements Serializable {
     /**
      * 所评论的文章的id
      */
-    private String articleId;
+    private Integer articleId;
 
     /**
      * 是否被删除（逻辑删除）1——已经被删除，2——没有被删除

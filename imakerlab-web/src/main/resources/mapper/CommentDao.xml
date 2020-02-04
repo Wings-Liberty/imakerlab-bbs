@@ -7,7 +7,7 @@
     <result column="comment_comment_time" jdbcType="DATE" property="commentTime" />
     <result column="comment_user_username" jdbcType="VARCHAR" property="userUsername" />
     <result column="comment_user_id" jdbcType="INTEGER" property="userId" />
-    <result column="comment_article_id" jdbcType="VARCHAR" property="articleId" />
+    <result column="comment_article_id" jdbcType="INTEGER" property="articleId" />
     <result column="comment_is_deleted" jdbcType="TINYINT" property="isDeleted" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -108,7 +108,7 @@
       user_id, article_id, is_deleted
       )
     values (#{content,jdbcType=VARCHAR}, #{commentTime,jdbcType=DATE}, #{userUsername,jdbcType=VARCHAR}, 
-      #{userId,jdbcType=INTEGER}, #{articleId,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}
+      #{userId,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER}, #{isDeleted,jdbcType=TINYINT}
       )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.imakerlab.bbs.model.po.Comment" useGeneratedKeys="true">
@@ -147,7 +147,7 @@
         #{userId,jdbcType=INTEGER},
       </if>
       <if test="articleId != null">
-        #{articleId,jdbcType=VARCHAR},
+        #{articleId,jdbcType=INTEGER},
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=TINYINT},
@@ -179,7 +179,7 @@
         comment.user_id = #{record.userId,jdbcType=INTEGER},
       </if>
       <if test="record.articleId != null">
-        comment.article_id = #{record.articleId,jdbcType=VARCHAR},
+        comment.article_id = #{record.articleId,jdbcType=INTEGER},
       </if>
       <if test="record.isDeleted != null">
         comment.is_deleted = #{record.isDeleted,jdbcType=TINYINT},
@@ -196,7 +196,7 @@
       comment.comment_time = #{record.commentTime,jdbcType=DATE},
       comment.user_username = #{record.userUsername,jdbcType=VARCHAR},
       comment.user_id = #{record.userId,jdbcType=INTEGER},
-      comment.article_id = #{record.articleId,jdbcType=VARCHAR},
+      comment.article_id = #{record.articleId,jdbcType=INTEGER},
       comment.is_deleted = #{record.isDeleted,jdbcType=TINYINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -218,7 +218,7 @@
         user_id = #{userId,jdbcType=INTEGER},
       </if>
       <if test="articleId != null">
-        article_id = #{articleId,jdbcType=VARCHAR},
+        article_id = #{articleId,jdbcType=INTEGER},
       </if>
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=TINYINT},
@@ -232,7 +232,7 @@
       comment_time = #{commentTime,jdbcType=DATE},
       user_username = #{userUsername,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
-      article_id = #{articleId,jdbcType=VARCHAR},
+      article_id = #{articleId,jdbcType=INTEGER},
       is_deleted = #{isDeleted,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
 @Slf4j
 @Service
 public class ArticleServiceImp implements ArticleService {
@@ -44,7 +45,7 @@ public class ArticleServiceImp implements ArticleService {
 
         articleExample.setOrderByClause(articleTypeEnum.getSort());
 
-        if (articleTypeEnum==ArticleTypeEnum.QUESTION||articleTypeEnum==ArticleTypeEnum.ACTIVITY) {
+        if (articleTypeEnum == ArticleTypeEnum.QUESTION || articleTypeEnum == ArticleTypeEnum.ACTIVITY) {
             criteria.andTypeEqualTo(articleTypeEnum.getType());
         }
 
@@ -67,15 +68,15 @@ public class ArticleServiceImp implements ArticleService {
 
         ArticleExample articleExample1 = new ArticleExample();
         ArticleExample.Criteria articleExampleCriteria1 = articleExample1.createCriteria();
-        articleExampleCriteria1.andTitleLike("%"+key+"%");
+        articleExampleCriteria1.andTitleLike("%" + key + "%");
 
         ArticleExample articleExample2 = new ArticleExample();
         ArticleExample.Criteria articleExampleCriteria2 = articleExample2.createCriteria();
-        articleExampleCriteria2.andAuthorNameLike("%"+key+"%");
+        articleExampleCriteria2.andAuthorNameLike("%" + key + "%");
 
         ArticleExample articleExample3 = new ArticleExample();
         ArticleExample.Criteria articleExampleCriteria3 = articleExample3.createCriteria();
-        articleExampleCriteria3.andSummaryLike("%"+key+"%");
+        articleExampleCriteria3.andSummaryLike("%" + key + "%");
 
         articleExample1.setDistinct(true);
         articleExample1.or(articleExampleCriteria2);
@@ -85,29 +86,29 @@ public class ArticleServiceImp implements ArticleService {
 
         List<BackContentVo> backContentVos = new ArrayList<>();
 
-        List<Article> articles1=null;
+        List<Article> articles1 = null;
 
         if (articles.size() >= 10) {
 
             articles1 = articles.subList(0, 9);
-        }else {
+        } else {
 
-            articles1=articles;
+            articles1 = articles;
         }
 
         if (articles1 != null) {
             for (Article article : articles1) {
-                if (article.getAuthorName().contains(key)){
+                if (article.getAuthorName().contains(key)) {
                     BackContentVo backContentVo = new BackContentVo();
                     backContentVo.setType("author_name");
                     backContentVo.setContent(article.getAuthorName());
                     backContentVos.add(backContentVo);
-                }else if (article.getTitle().contains(key)){
+                } else if (article.getTitle().contains(key)) {
                     BackContentVo backContentVo = new BackContentVo();
                     backContentVo.setType("title");
                     backContentVo.setContent(article.getTitle());
                     backContentVos.add(backContentVo);
-                }else if (article.getSummary().contains(key)){
+                } else if (article.getSummary().contains(key)) {
                     BackContentVo backContentVo = new BackContentVo();
                     backContentVo.setType("summary");
                     backContentVo.setContent(article.getSummary());
@@ -121,21 +122,21 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public Map<String,List<String>>  getLabel(Integer userId) {
+    public Map<String, List<String>> getLabel(Integer userId) {
 
         User user = getUserById(userId);
 
         ArrayList<String> sorts = new ArrayList<>();
         HashMap<String, List<String>> map = new HashMap<>();
 
-        if (user.getAuthority().equals("ROLE_ADMIN")||user.getAuthority().contains("ROLE_ADMIN")){
+        if (user.getAuthority().equals("ROLE_ADMIN") || user.getAuthority().contains("ROLE_ADMIN")) {
 
             sorts.add("Notices");
             sorts.add("Activities");
 
-            map.put("label",sorts);
+            map.put("label", sorts);
             return map;
-        }else {
+        } else {
 
             ArticleExample articleExample = new ArticleExample();
             ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
@@ -145,7 +146,7 @@ public class ArticleServiceImp implements ArticleService {
 
             for (Article article : articles) {
 
-                String label1 = article.getLabel().replace(" ","");
+                String label1 = article.getLabel().replace(" ", "");
                 String label2 = label1.substring(1, label1.length() - 1);
                 String[] split = label2.split(",");
 
@@ -155,7 +156,7 @@ public class ArticleServiceImp implements ArticleService {
                     }
                 }
             }
-            map.put("label",sorts);
+            map.put("label", sorts);
             return map;
         }
     }
@@ -173,22 +174,22 @@ public class ArticleServiceImp implements ArticleService {
 
         CommentExample commentExample = new CommentExample();
         CommentExample.Criteria commentExampleCriteria = commentExample.createCriteria();
-        commentExampleCriteria.andArticleIdEqualTo(id.toString());
+        commentExampleCriteria.andArticleIdEqualTo(id);
         List<Comment> comments = commentDao.selectByExample(commentExample);
 
         ArrayList<CommentVo> commentVos = new ArrayList<>();
 
         for (Comment comment : comments) {
             commentVos.add(new CommentVo(comment.getUserUsername(),
-                                         comment.getContent(),
-                                         comment.getCommentTime(),
-                                         userDao.selectByPrimaryKey(comment.getUserId()).getFigureUrl()));
+                    comment.getContent(),
+                    comment.getCommentTime(),
+                    userDao.selectByPrimaryKey(comment.getUserId()).getFigureUrl()));
         }
 
         ArticleWithComments articleWithComments = new ArticleWithComments(
                 user.getUsername(),
                 user.getFigureUrl(),
-                id,article.getLikes(),
+                id, article.getLikes(),
                 article.getViews().toString(),
                 article.getText(),
                 article.getLabel(),
@@ -201,14 +202,14 @@ public class ArticleServiceImp implements ArticleService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteArticlesByUser(List<Integer> delArticleIdList,Integer userId) {
+    public void deleteArticlesByUser(List<Integer> delArticleIdList, Integer userId) {
 
         User user = getUserById(userId);
         String username = user.getUsername();
 
-        if (user.getAuthority().equals("ROLE_ADMIN")){
+        if (user.getAuthority().equals("ROLE_ADMIN")) {
 
-            if (delArticleIdList.size()==0||delArticleIdList==null){
+            if (delArticleIdList.size() == 0 || delArticleIdList == null) {
                 throw new MyException("没有选择公告Id");
             }
 
@@ -233,7 +234,7 @@ public class ArticleServiceImp implements ArticleService {
 
             article.setIsDeleted(Byte.parseByte("0"));
 
-            Integer count = articleDao.updateByExampleSelective(article,articleExample);
+            Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
             if (count != delArticleIdList.size()) {
                 throw new MyException("删除公告失败");
@@ -241,23 +242,23 @@ public class ArticleServiceImp implements ArticleService {
 
             log.info("公告删除成功");
 
-        }else {
+        } else {
 
-            if (delArticleIdList.size()==0||delArticleIdList==null){
+            if (delArticleIdList.size() == 0 || delArticleIdList == null) {
                 throw new MyException("没有选择文章Id");
             }
 
-                ArticleExample articleExample = new ArticleExample();
-                ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
-                articleExampleCriteria.andIdIn(delArticleIdList);
-                articleExampleCriteria.andAuthorIdEqualTo(userId);
-                articleExampleCriteria.andTypeEqualTo("question");
-                articleExampleCriteria.andAuthorNameEqualTo(username);
+            ArticleExample articleExample = new ArticleExample();
+            ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
+            articleExampleCriteria.andIdIn(delArticleIdList);
+            articleExampleCriteria.andAuthorIdEqualTo(userId);
+            articleExampleCriteria.andTypeEqualTo("question");
+            articleExampleCriteria.andAuthorNameEqualTo(username);
 
-                Article article = new Article();
-                article.setIsDeleted(Byte.parseByte("0"));
+            Article article = new Article();
+            article.setIsDeleted(Byte.parseByte("0"));
 
-                Integer count = articleDao.updateByExampleSelective(article,articleExample);
+            Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
             if (count != delArticleIdList.size()) {
                 throw new MyException("删除文章失败");
@@ -273,7 +274,7 @@ public class ArticleServiceImp implements ArticleService {
 
         User user = getUserById(Integer.parseInt(authorId));
 
-        if (user.getAuthority().equals("ROLE_ADMIN")||user.getAuthority().contains("ROLE_ADMIN")){
+        if (user.getAuthority().equals("ROLE_ADMIN") || user.getAuthority().contains("ROLE_ADMIN")) {
 
             ArticleExample articleExample = new ArticleExample();
             ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
@@ -289,13 +290,13 @@ public class ArticleServiceImp implements ArticleService {
 
             Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
-            if (count!=0&&count!=1){
+            if (count != 0 && count != 1) {
                 throw new MyException("更新出现错误错误，请重试");
             }
 
             log.info("更新公告成功");
 
-        }else {
+        } else {
 
             ArticleExample articleExample = new ArticleExample();
             ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
@@ -311,7 +312,7 @@ public class ArticleServiceImp implements ArticleService {
 
             Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
-            if (count!=0&&count!=1){
+            if (count != 0 && count != 1) {
                 throw new MyException("更新出现错误错误，请重试");
             }
 
@@ -324,7 +325,7 @@ public class ArticleServiceImp implements ArticleService {
     public User getUserById(Integer userId) {
         User user = userDao.selectByPrimaryKey(userId);
         if (user == null) {
-            throw  new MyException("此用户id不存在");
+            throw new MyException("此用户id不存在");
         }
         return user;
     }
@@ -352,7 +353,7 @@ public class ArticleServiceImp implements ArticleService {
         article.setIsDeleted(Byte.parseByte("0"));
         article.setType("question");
         Integer count = articleDao.insertSelective(article);
-        if (count==0){
+        if (count == 0) {
             throw new MyException("添加文章失败");
         }
 
@@ -361,7 +362,7 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public void postImage(Integer userId,Integer articleId,String coverUrl) {
+    public void postImage(Integer userId, Integer articleId, String coverUrl) {
 
         Article article = new Article();
         article.setCoverUrl(coverUrl);
@@ -397,7 +398,7 @@ public class ArticleServiceImp implements ArticleService {
         articleTo.setId(articleId);
 
         Like like1 = new Like();
-        if (like==null){
+        if (like == null) {
             like1.setArticleId(articleId);
             like1.setUserId(userId);
             like1.setIsLike(Byte.parseByte("1"));
@@ -407,18 +408,19 @@ public class ArticleServiceImp implements ArticleService {
             if (count != 1) {
                 throw new MyException("点赞失败");
             }
-            articleTo.setLikes(article.getLikes()+1);
+            articleTo.setLikes(article.getLikes() + 1);
 
             int i = articleDao.updateByPrimaryKeySelective(articleTo);
 
-            if (i!=1){
+            if (i != 1) {
                 throw new MyException("点赞失败");
             }
 
             log.info("点赞成功");
 
-        }else {
-            if (like.getIsLike()==1){
+        }
+        else {
+            if (like.getIsLike() == 1) {
                 like1.setIsLike(Byte.parseByte("0"));
                 Integer count = likeDao.updateByPrimaryKeySelective(like1);
 
@@ -426,14 +428,14 @@ public class ArticleServiceImp implements ArticleService {
                     throw new MyException("取消点赞失败");
                 }
 
-                articleTo.setLikes(article.getLikes()-1);
+                articleTo.setLikes(article.getLikes() - 1);
                 int i = articleDao.updateByPrimaryKeySelective(articleTo);
 
                 if (i != 1) {
                     throw new MyException("取消点赞失败");
                 }
                 log.info("取消点赞成功");
-            }else {
+            } else {
                 like1.setIsLike(Byte.parseByte("1"));
                 int count = likeDao.updateByPrimaryKeySelective(like1);
                 if (count != 1) {

@@ -462,62 +462,52 @@ public class CommentExample {
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdEqualTo(String value) {
+        public Criteria andArticleIdEqualTo(Integer value) {
             addCriterion("comment.article_id =", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdNotEqualTo(String value) {
+        public Criteria andArticleIdNotEqualTo(Integer value) {
             addCriterion("comment.article_id <>", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdGreaterThan(String value) {
+        public Criteria andArticleIdGreaterThan(Integer value) {
             addCriterion("comment.article_id >", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdGreaterThanOrEqualTo(String value) {
+        public Criteria andArticleIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("comment.article_id >=", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdLessThan(String value) {
+        public Criteria andArticleIdLessThan(Integer value) {
             addCriterion("comment.article_id <", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdLessThanOrEqualTo(String value) {
+        public Criteria andArticleIdLessThanOrEqualTo(Integer value) {
             addCriterion("comment.article_id <=", value, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdLike(String value) {
-            addCriterion("comment.article_id like", value, "articleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleIdNotLike(String value) {
-            addCriterion("comment.article_id not like", value, "articleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andArticleIdIn(List<String> values) {
+        public Criteria andArticleIdIn(List<Integer> values) {
             addCriterion("comment.article_id in", values, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdNotIn(List<String> values) {
+        public Criteria andArticleIdNotIn(List<Integer> values) {
             addCriterion("comment.article_id not in", values, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdBetween(String value1, String value2) {
+        public Criteria andArticleIdBetween(Integer value1, Integer value2) {
             addCriterion("comment.article_id between", value1, value2, "articleId");
             return (Criteria) this;
         }
 
-        public Criteria andArticleIdNotBetween(String value1, String value2) {
+        public Criteria andArticleIdNotBetween(Integer value1, Integer value2) {
             addCriterion("comment.article_id not between", value1, value2, "articleId");
             return (Criteria) this;
         }
