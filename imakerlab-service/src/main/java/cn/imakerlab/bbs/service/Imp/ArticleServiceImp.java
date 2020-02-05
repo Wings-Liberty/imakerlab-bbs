@@ -1,6 +1,7 @@
 package cn.imakerlab.bbs.service.Imp;
 
 import cn.imakerlab.bbs.enums.ArticleTypeEnum;
+import cn.imakerlab.bbs.enums.UserAuthorityEnum;
 import cn.imakerlab.bbs.mapper.ArticleDao;
 import cn.imakerlab.bbs.mapper.CommentDao;
 import cn.imakerlab.bbs.mapper.LikeDao;
@@ -45,7 +46,7 @@ public class ArticleServiceImp implements ArticleService {
 
         articleExample.setOrderByClause(articleTypeEnum.getSort());
 
-        if (articleTypeEnum == ArticleTypeEnum.QUESTION || articleTypeEnum == ArticleTypeEnum.ACTIVITY) {
+        if (ArticleTypeEnum.QUESTION.getArticle()) {
             criteria.andTypeEqualTo(articleTypeEnum.getType());
         }
 
@@ -129,7 +130,7 @@ public class ArticleServiceImp implements ArticleService {
         ArrayList<String> sorts = new ArrayList<>();
         HashMap<String, List<String>> map = new HashMap<>();
 
-        if (user.getAuthority().equals("ROLE_ADMIN") || user.getAuthority().contains("ROLE_ADMIN")) {
+        if (user.getAuthority().equals(UserAuthorityEnum.Admin.getAuthority()) || user.getAuthority().contains(UserAuthorityEnum.Admin.getAuthority())) {
 
             sorts.add("Notices");
             sorts.add("Activities");
@@ -165,10 +166,12 @@ public class ArticleServiceImp implements ArticleService {
     public ArticleWithComments getDetailMsgOfArticleByArticleId(Integer id) {
 
         Article article = articleDao.selectByPrimaryKey(id);
-        if (article.getIsDeleted() == '0') {
+        if (article.getIsDeleted() == 0) {
             return null;
         }
-
+        if (article == null) {
+            throw new MyException("该文章不存在");
+        }
         Integer authorId = article.getAuthorId();
         User user = userDao.selectByPrimaryKey(authorId);
 
@@ -207,10 +210,10 @@ public class ArticleServiceImp implements ArticleService {
         User user = getUserById(userId);
         String username = user.getUsername();
 
-        if (user.getAuthority().equals("ROLE_ADMIN")) {
+        if (user.getAuthority().equals(UserAuthorityEnum.Admin.getAuthority())) {
 
             if (delArticleIdList.size() == 0 || delArticleIdList == null) {
-                throw new MyException("没有选择公告Id");
+                throw new MyException("没有选择公告或文章Id");
             }
 
             ArticleExample articleExample = new ArticleExample();
@@ -219,16 +222,16 @@ public class ArticleServiceImp implements ArticleService {
             articleExampleCriteria.andAuthorIdEqualTo(userId);
             articleExampleCriteria.andIdIn(delArticleIdList);
 
-            ArticleExample articleExample1 = new ArticleExample();
-            ArticleExample.Criteria criteria1 = articleExample1.createCriteria();
-            criteria1.andTypeEqualTo("activity");
+//            ArticleExample articleExample1 = new ArticleExample();
+//            ArticleExample.Criteria criteria1 = articleExample1.createCriteria();
+//            criteria1.andTypeEqualTo(ArticleTypeEnum.ACTIVITY.getType());
+//
+//            ArticleExample articleExample2 = new ArticleExample();
+//            ArticleExample.Criteria criteria2 = articleExample2.createCriteria();
+//            criteria2.andTypeEqualTo(ArticleTypeEnum.NOTICE.getType());
 
-            ArticleExample articleExample2 = new ArticleExample();
-            ArticleExample.Criteria criteria2 = articleExample2.createCriteria();
-            criteria2.andTypeEqualTo("notice");
-
-            articleExample1.or(criteria2);
-            articleExample.or(criteria1);
+//            articleExample1.or(criteria2);
+//            articleExample.or(criteria1);
 
             Article article = new Article();
 
@@ -237,10 +240,10 @@ public class ArticleServiceImp implements ArticleService {
             Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
             if (count != delArticleIdList.size()) {
-                throw new MyException("删除公告失败");
+                throw new MyException("管理删除公告或文章失败");
             }
 
-            log.info("公告删除成功");
+            log.info("管理删除公告或文章成功");
 
         } else {
 
@@ -252,7 +255,7 @@ public class ArticleServiceImp implements ArticleService {
             ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
             articleExampleCriteria.andIdIn(delArticleIdList);
             articleExampleCriteria.andAuthorIdEqualTo(userId);
-            articleExampleCriteria.andTypeEqualTo("question");
+            articleExampleCriteria.andTypeEqualTo(ArticleTypeEnum.QUESTION.getType());
             articleExampleCriteria.andAuthorNameEqualTo(username);
 
             Article article = new Article();
@@ -274,19 +277,19 @@ public class ArticleServiceImp implements ArticleService {
 
         User user = getUserById(Integer.parseInt(authorId));
 
-        if (user.getAuthority().equals("ROLE_ADMIN") || user.getAuthority().contains("ROLE_ADMIN")) {
+        ArticleExample articleExample = new ArticleExample();
+        ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
+        articleExampleCriteria.andIdEqualTo(Integer.parseInt(articleId));
+        articleExampleCriteria.andAuthorIdEqualTo(Integer.parseInt(authorId));
 
-            ArticleExample articleExample = new ArticleExample();
-            ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
-            articleExampleCriteria.andIdEqualTo(Integer.parseInt(articleId));
-            articleExampleCriteria.andAuthorIdEqualTo(Integer.parseInt(authorId));
+        Article article = new Article();
+        article.setAuthorId(Integer.parseInt(authorId));
+        article.setId(Integer.parseInt(articleId));
+        article.setText(text);
+        article.setTitle(title);
+        article.setLabel(label);
 
-            Article article = new Article();
-            article.setAuthorId(Integer.parseInt(authorId));
-            article.setId(Integer.parseInt(articleId));
-            article.setText(text);
-            article.setTitle(title);
-            article.setLabel(label);
+        if (user.getAuthority().equals(UserAuthorityEnum.Admin.getAuthority()) || user.getAuthority().contains(UserAuthorityEnum.Admin.getAuthority())) {
 
             Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
@@ -298,17 +301,7 @@ public class ArticleServiceImp implements ArticleService {
 
         } else {
 
-            ArticleExample articleExample = new ArticleExample();
-            ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
-            articleExampleCriteria.andIdEqualTo(Integer.parseInt(articleId));
-            articleExampleCriteria.andAuthorIdEqualTo(Integer.parseInt(authorId));
-
-            Article article = new Article();
-            article.setAuthorId(Integer.parseInt(authorId));
-            article.setId(Integer.parseInt(articleId));
-            article.setText(text);
-            article.setTitle(title);
-            article.setLabel(label);
+            articleExampleCriteria.andTypeEqualTo(ArticleTypeEnum.QUESTION.getType());
 
             Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
