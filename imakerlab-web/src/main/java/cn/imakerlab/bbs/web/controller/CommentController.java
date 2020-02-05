@@ -15,7 +15,7 @@ public class CommentController {
     @ResponseBody
     @PostMapping("/comment")
     public ResultUtils postCommentByUser(@RequestParam("userId") String userId,
-                                         @RequestParam("articleId") String articleId,
+                                         @RequestParam("articleId") Integer articleId,
                                          @RequestParam("content") String content){
         commentServiceImp.postCommentByUser(Integer.parseInt(userId),articleId,content);
 
@@ -24,8 +24,10 @@ public class CommentController {
 
     @ResponseBody
     @DeleteMapping("/comment")
-    public ResultUtils deleteCommentByUser(@RequestParam("userId") String userId, @RequestParam("articleId") String articleId,
-                                           @RequestParam("id")String id, HttpServletRequest request){
+    public ResultUtils deleteCommentByUser(@RequestParam("userId") String userId,
+                                           @RequestParam("articleId") Integer articleId,
+                                           @RequestParam("id")String id,
+                                           HttpServletRequest request){
         Integer userId2 = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
         commentServiceImp.deleteCommentByUser(Integer.parseInt(userId),articleId,Integer.parseInt(id),userId2);
 

@@ -16,7 +16,7 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class CommentServiceImp implements CommentService {
+public class CommentServiceImp implements CommentService{
     @Autowired
     CommentDao commentDao;
 
@@ -35,7 +35,7 @@ public class CommentServiceImp implements CommentService {
     }
 
     @Override
-    public void postCommentByUser(Integer userId, String articleId, String content) {
+    public void postCommentByUser(Integer userId, Integer articleId, String content) {
         User user = getUserById(userId);
 
         if (user == null) {
@@ -60,7 +60,7 @@ public class CommentServiceImp implements CommentService {
     }
 
     @Override
-    public void deleteCommentByUser(Integer userId, String articleId, Integer id, Integer userId2) {
+    public void deleteCommentByUser(Integer userId, Integer articleId, Integer id, Integer userId2) {
         if (userId!=userId2){
             throw new MyException("您无此权限删除他人评论");
         }
