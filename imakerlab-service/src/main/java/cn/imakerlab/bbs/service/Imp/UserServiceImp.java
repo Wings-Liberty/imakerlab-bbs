@@ -1,5 +1,6 @@
 package cn.imakerlab.bbs.service.Imp;
 
+import cn.imakerlab.bbs.constant.DefaultConstant;
 import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.po.User;
@@ -8,16 +9,21 @@ import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.vo.UserVo;
 import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.MyUtils;
+import cn.imakerlab.bbs.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -34,24 +40,30 @@ public class UserServiceImp implements UserService {
     UserDao userDao;
 
     @Override
-    public void register(UserVo userVo) {
+    public void register(String username, String password) {
 
-        if (isExistUsername(userVo.getUsername())) {
-            logger.info("用户名：'" + userVo.getUsername() + "'已存在");
+        if (!MyUtils.matchUsername(username)) {
+            throw new MyException(ErrorConstant.User.USER_NAME_NOT_FORMAT);
+        }
+        if (!MyUtils.matchPassword(password)) {
+            throw new MyException(ErrorConstant.User.USER_PASSWORD_NOT_FORMAT);
+        }
+        if (isExistUsername(username)) {
+            logger.info("用户名：'" + username + "'已存在");
             throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
         }
 
-        logger.info("没有和'" + userVo.getUsername() + "'重复的名字，这个名字可以注册账号");
+        logger.info("没有和'" + username + "'重复的名字，这个名字可以注册账号");
 
         User user = new User();
 
-        user.setUsername(userVo.getUsername());
-        user.setPassword(passwordEncoder.encode(userVo.getPassword()));
-        user.setFigureUrl("");
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setFigureUrl(DefaultConstant.User.USER_FIGURE_URL);
         user.setSlogan("");
         user.setStars(0);
         user.setAuthority("");
-        user.setIsDeleted((byte)0);
+        user.setIsDeleted((byte) 0);
         user.setArticleNum(0);
 
         userDao.insertSelective(user);
@@ -78,19 +90,15 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User getUserByAuthentication(Authentication authentication) {
+    public User getUserByUserId(int userId) {
 
-        String username = authentication.getName();
+        User user = userDao.selectByPrimaryKey(userId);
 
-        UserExample example = new UserExample();
-        example.createCriteria().andUsernameEqualTo(username);
-
-        User user = MyUtils.ListToOne(userDao.selectByExample(example));
-
-        user.setPassword("");
+        if (user == null) {
+            throw new MyException("找不到该用户的信息");
+        }
 
         return user;
-
     }
 
     @Override
@@ -106,29 +114,31 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void setSloganAndUsername(int id, String newSlogan,  String newUsername) {
+    public void setSloganAndUsernameByUserId(int userId, String newSlogan, String newUsername) {
 
-        UserExample example = new UserExample();
-        example.createCriteria().andIdEqualTo(id);
+        if (!MyUtils.matchUsername(newUsername)) {
+            throw new MyException(ErrorConstant.User.USER_NAME_NOT_FORMAT);
+        } else if (isExistUsername(newUsername)) {
+            throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
+        } else if (newSlogan.length() > DefaultConstant.User.USER_SLOGAN_MAX_LENGTH) {
+            throw new MyException(ErrorConstant.User.USER_SLOGAN_SIZE_EXECEEDS);
+        }
 
         User user = new User();
+        user.setId(userId);
         user.setSlogan(newSlogan);
         user.setUsername(newUsername);
 
-        userDao.updateByExampleSelective(user, example);
+        userDao.updateByPrimaryKeySelective(user);
 
     }
 
     @Override
-    public UserVo getUserVoById(int id) {
+    public UserVo getUserVoById(int userId) {
 
         logger.info("getUserVoById可以使用");
 
-        User user = userDao.selectByPrimaryKey(id);
-
-        if(user == null){
-            throw new MyException("找不到该用户的信息");
-        }
+        User user = getUserByUserId(userId);
 
         UserVo userVo = new UserVo(user);
 
@@ -137,9 +147,10 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<User> getAllNotDeletedUser() {
+    public List<User> listAllNotDeletedUsers(String authority) {
 
         UserExample example = new UserExample();
+
         example.createCriteria().andIsDeletedEqualTo((byte) 0);
 
         List<User> userList = userDao.selectByExample(example);
@@ -149,43 +160,107 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void deleteUserByList(List<Integer> delList) {
+    public void deleteUserByList(List<Integer> delList, String authority) {
 
         UserExample example = new UserExample();
-
         example.createCriteria().andIdIn(delList);
 
-        List<User> userList = userDao.selectByExample(example);
+        User user = new User();
+        user.setIsDeleted((byte) 1);
 
-        System.out.println(userList);
-
-        System.out.println("要删除的元素有");
-
-        for(User user : userList){
-            System.out.println(user);
-        }
-
-        userDao.deleteByExample(example);
+        userDao.updateByExampleSelective(user, example);
     }
 
     @Override
-    public void modifyByUserId(int id, String oldPassword, String newPassword) {
+    public void updatePasswordByUserId(int userId, String oldPassword, String newPassword) {
+
+        if (!MyUtils.matchPassword(newPassword)) {
+            throw new MyException(ErrorConstant.User.USER_PASSWORD_NOT_FORMAT);
+        }
 
         UserExample example = new UserExample();
-        example.createCriteria().andIdEqualTo(id);
+        example.createCriteria().andIdEqualTo(userId);
 
-
-        if( passwordEncoder.matches(oldPassword, userDao.selectByPrimaryKey(id).getPassword()) ){
+        if (passwordEncoder.matches(oldPassword, userDao.selectByPrimaryKey(userId).getPassword())) {
             logger.info("密码正确，可以修改密码");
 
             User user = new User();
             user.setPassword(passwordEncoder.encode(newPassword));
 
             userDao.updateByExampleSelective(user, example);
-        }else {
-            throw new MyException("输入的旧密码错误，请重新输入");
+        } else {
+            throw new MyException(ErrorConstant.User.PASSWORD_NOT_MATCH);
         }
 
+    }
+
+    @Override
+    public void updateStarts(int userId, boolean flag) {
+        int updateStarts = flag ? 1 : -1;
+
+        User user = userDao.selectByPrimaryKey(userId);
+        user.setStars(user.getStars() + updateStarts);
+
+        userDao.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public UserVo getNotDeleteedUserVoById(int userId) {
+        User user = getUserByUserId(userId);
+
+        if (user.getIsDeleted() == 1) {
+            throw new MyException(ErrorConstant.User.USER_IS_DELETED);
+        }
+
+        UserVo userVo = new UserVo(user);
+
+        return userVo;
+    }
+
+    @Override
+    public void updateUserByUserPo(User user) {
+
+        userDao.updateByPrimaryKeySelective(user);
+
+    }
+
+    @Override
+    public void updateUserArticleNumAddOneByUserId(Integer userId) {
+
+        User user = getUserByUserId(userId);
+
+        user.setArticleNum(user.getArticleNum() + 1);
+
+        userDao.updateByPrimaryKeySelective(user);
+
+    }
+
+    @Override
+    public List<UserVo> listAllNotDeletedUserVos(String authority) {
+
+        List<User> userList = listAllNotDeletedUsers(authority);
+
+        List<UserVo> userVoList = new ArrayList<>();
+
+        for (User user : userList) {
+            userVoList.add(new UserVo(user));
+        }
+
+        return userVoList;
+
+    }
+
+    @Override
+    public String getUsernameByUserId(Integer userId) {
+        User user = getUserByUserId(userId);
+
+        String username = DefaultConstant.User.DELETED_USER_USERNAME;
+
+        if(user.getIsDeleted() == 0){
+            username = user.getUsername();
+        }
+
+        return username;
 
     }
 

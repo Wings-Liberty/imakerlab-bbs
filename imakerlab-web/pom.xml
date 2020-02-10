@@ -12,46 +12,57 @@
 
     <artifactId>imakerlab-web</artifactId>
 
-<dependencies>
-    <dependency>
-        <groupId>cn.imakerlab.bbs</groupId>
-        <artifactId>imakerlab-service</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>cn.imakerlab.bbs</groupId>
-        <artifactId>imakerlab-dao</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>cn.imakerlab.bbs</groupId>
-        <artifactId>imakerlab-model</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>cn.imakerlab.bbs</groupId>
-        <artifactId>imakerlab-security</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>cn.imakerlab.bbs</groupId>
-        <artifactId>imakerlab-component</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <!-- 分页插件 -->
-    <dependency>
-        <groupId>com.github.pagehelper</groupId>
-        <artifactId>pagehelper-spring-boot-starter</artifactId>
-        <version>1.2.12</version>
-    </dependency>
-    <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>fastjson</artifactId>
-        <version>1.2.57</version>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-dao</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-security</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.imakerlab.bbs</groupId>
+            <artifactId>imakerlab-component</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
 
-</dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.57</version>
+        </dependency>
+
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <finalName>imakerlab-bbs</finalName>
+    </build>
 
 </project>

@@ -1,18 +1,23 @@
 package cn.imakerlab.bbs.service.Imp;
 
+import cn.imakerlab.bbs.constant.DefaultConstant;
+import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.mapper.ArticleDao;
 import cn.imakerlab.bbs.mapper.CommentDao;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.exception.MyException;
-import cn.imakerlab.bbs.model.po.Article;
 import cn.imakerlab.bbs.model.po.Comment;
+import cn.imakerlab.bbs.model.po.CommentExample;
 import cn.imakerlab.bbs.model.po.User;
+import cn.imakerlab.bbs.model.vo.CommentVo;
 import cn.imakerlab.bbs.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,59 +30,101 @@ public class CommentServiceImp implements CommentService {
 
     @Autowired
     ArticleDao articleDao;
+
     @Override
     public User getUserById(Integer userId) {
         User user = userDao.selectByPrimaryKey(userId);
         if (user == null) {
-            throw  new MyException("此用户id不存在");
+            throw new MyException("此用户id不存在");
         }
         return user;
     }
 
     @Override
-    public void postCommentByUser(Integer userId, String articleId, String content) {
-        User user = getUserById(userId);
+    public void insertComment(Integer userId, String username, Integer articleId, String content, boolean isEffectArticle) {
 
-        if (user == null) {
-            throw new MyException("用户id不存在");
+        if (content.length() > DefaultConstant.Comment.COMMENT_MAX_LENGTH) {
+            throw new MyException(ErrorConstant.Comment.COMMENT_LENGTH_IS_EXECEEDS);
         }
+
+        byte effectArticle = (byte) (isEffectArticle ? 1 : 0);
 
         Comment comment = new Comment();
-        comment.setArticleId(Integer.parseInt(articleId));
+        comment.setArticleId(articleId);
         comment.setCommentTime(new Date());
         comment.setContent(content);
-        comment.setIsDeleted(Byte.parseByte("0"));
+        comment.setIsDeleted((byte) 0);
         comment.setUserId(userId);
-        comment.setUserUsername(user.getUsername());
+        comment.setUserUsername(username);
+        comment.setIsEffectArticle(effectArticle);
 
-        Integer count = commentDao.insert(comment);
+        commentDao.insert(comment);
 
-        if (count == 0) {
-            throw new MyException("评论失败");
-        }
-
-        log.info("用户:"+user.getUsername()+"评论成功");
     }
 
     @Override
-    public void deleteCommentByUser(Integer userId, String articleId, Integer id, Integer userId2) {
-        if (userId!=userId2){
-            throw new MyException("您无此权限删除他人评论");
-        }
+    public void deleteCommentByUserIdAndCommentId(Integer id, Integer userId) {
 
-        Comment comment = commentDao.selectByPrimaryKey(id);
+        Comment comment = new Comment();
+        comment.setId(id);
+        comment.setUserId(userId);
+        comment.setIsDeleted((byte) 1);
 
-        if (comment.getArticleId()!=Integer.parseInt(articleId)){
-            throw new MyException("文章id与评论id不符");
-        }
-
-        Integer count = commentDao.deleteByPrimaryKey(id);
-
-        if (count == 0) {
-            throw new MyException("评论删除失败");
-        }
+        commentDao.updateByPrimaryKeySelective(comment);
 
         log.info("评论删除成功");
+    }
+
+    @Override
+    public List<Comment> listCommentByArticleId(int articleId) {
+
+        CommentExample example = new CommentExample();
+        example.createCriteria()
+                .andArticleIdEqualTo(articleId);
+
+        List<Comment> commentList = commentDao.selectByExample(example);
+
+        return commentList;
+
+    }
+
+    @Override
+    public List<CommentVo> commentListToCommentVoList(List<Comment> commentList) {
+
+        List<CommentVo> commentVoList = new ArrayList<>();
+
+        for (Comment comment : commentList) {
+
+            User user = userDao.selectByPrimaryKey(comment.getUserId());
+
+            if (user == null) {
+                log.info("评论列表中有不存在的用户的id，id为 " + comment.getUserId());
+                continue;
+            }
+            if (user.getIsDeleted() == 1) {
+                user.setUsername(DefaultConstant.User.DELETED_USER_USERNAME);
+                user.setFigureUrl(DefaultConstant.User.DELETED_USER_FIGURE_URL);
+            }
+
+            commentVoList.add(new CommentVo(
+                    comment,
+                    user.getUsername(),
+                    user.getFigureUrl()
+            ));
+        }
+
+        return commentVoList;
+    }
+
+    @Override
+    public List<CommentVo> listCommentVosByArticleId(int articleId) {
+
+        List<Comment> commentList = listCommentByArticleId(articleId);
+
+        List<CommentVo> commentVoList = commentListToCommentVoList(commentList);
+
+        return commentVoList;
+
     }
 
 }

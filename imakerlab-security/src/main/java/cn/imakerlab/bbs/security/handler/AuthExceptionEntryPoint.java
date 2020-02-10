@@ -1,4 +1,4 @@
-package cn.imakerlab.bbs.security;
+package cn.imakerlab.bbs.security.handler;
 
 import cn.imakerlab.bbs.constant.ErrorConstant;
 import com.fasterxml.jackson.databind.ObjectMapper;

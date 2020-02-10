@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * todo
  * @author 
@@ -18,6 +20,7 @@ public class Todo implements Serializable {
     /**
      * 目标内容
      */
+    @NotBlank
     private String plan;
 
     /**

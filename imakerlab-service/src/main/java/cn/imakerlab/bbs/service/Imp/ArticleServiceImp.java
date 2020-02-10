@@ -1,26 +1,32 @@
 package cn.imakerlab.bbs.service.Imp;
 
+import cn.imakerlab.bbs.constant.DefaultConstant;
+import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.enums.ArticleTypeEnum;
-import cn.imakerlab.bbs.enums.UserAuthorityEnum;
+import cn.imakerlab.bbs.enums.LabelEnum;
+import cn.imakerlab.bbs.enums.RoleEnum;
 import cn.imakerlab.bbs.mapper.ArticleDao;
 import cn.imakerlab.bbs.mapper.CommentDao;
-import cn.imakerlab.bbs.mapper.LikeDao;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.exception.MyException;
-import cn.imakerlab.bbs.model.po.*;
-
-import cn.imakerlab.bbs.model.vo.BackContentVo;
-import cn.imakerlab.bbs.model.vo.CommentVo;
+import cn.imakerlab.bbs.model.po.Article;
+import cn.imakerlab.bbs.model.po.ArticleExample;
+import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.vo.ArticleVo;
-import cn.imakerlab.bbs.model.vo.ArticleWithComments;
-
+import cn.imakerlab.bbs.model.vo.BackContentVo;
 import cn.imakerlab.bbs.service.ArticleService;
+import cn.imakerlab.bbs.utils.MyUtils;
+import cn.imakerlab.bbs.utils.ResultUtils;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -34,262 +40,189 @@ public class ArticleServiceImp implements ArticleService {
     @Autowired
     CommentDao commentDao;
 
-    @Autowired
-    LikeDao likeDao;
-
     //通过类型查询文章信息
     @Override
-    public List<ArticleVo> getArticlesMsgByType(ArticleTypeEnum articleTypeEnum) {
+    public List<ArticleVo> listArticleVosByType(ArticleTypeEnum articleTypeEnum) {
 
         ArticleExample articleExample = new ArticleExample();
         ArticleExample.Criteria criteria = articleExample.createCriteria();
 
         articleExample.setOrderByClause(articleTypeEnum.getSort());
 
-        if (ArticleTypeEnum.QUESTION.getArticle()) {
+        if (articleTypeEnum.getArticle()) {
             criteria.andTypeEqualTo(articleTypeEnum.getType());
         }
 
-        List<Article> articles = articleDao.selectByExample(articleExample);
+        List<Article> articleList = articleDao.selectByExample(articleExample);
 
-        List<ArticleVo> articleVos = new ArrayList<>();
+        List<ArticleVo> articleVoList = new ArrayList<>();
 
-        for (Article article : articles) {
-            ArticleVo articleVo = new ArticleVo(article);
-            articleVos.add(articleVo);
+        for (Article article : articleList) {
+            articleVoList.add(new ArticleVo(article));
         }
 
         log.info("下拉刷新查找文章信息成功");
-        return articleVos;
+
+        return articleVoList;
     }
 
 
     @Override
     public List<BackContentVo> searchMsgByKey(String key) {
 
-        ArticleExample articleExample1 = new ArticleExample();
-        ArticleExample.Criteria articleExampleCriteria1 = articleExample1.createCriteria();
-        articleExampleCriteria1.andTitleLike("%" + key + "%");
+        PageHelper.startPage(1, DefaultConstant.Page.PAGE_SIZE);
 
-        ArticleExample articleExample2 = new ArticleExample();
-        ArticleExample.Criteria articleExampleCriteria2 = articleExample2.createCriteria();
-        articleExampleCriteria2.andAuthorNameLike("%" + key + "%");
+        ArticleExample example = new ArticleExample();
 
-        ArticleExample articleExample3 = new ArticleExample();
-        ArticleExample.Criteria articleExampleCriteria3 = articleExample3.createCriteria();
-        articleExampleCriteria3.andSummaryLike("%" + key + "%");
+        example.or().andAuthorNameLike("%" + key + "%");
+        example.or().andSummaryLike("%" + key + "%");
+        example.or().andTitleLike("%" + key + "%");
 
-        articleExample1.setDistinct(true);
-        articleExample1.or(articleExampleCriteria2);
-        articleExample1.or(articleExampleCriteria3);
+        example.setDistinct(true);
 
-        List<Article> articles = articleDao.selectByExample(articleExample1);
+        List<Article> articles = articleDao.selectByExample(example);
 
         List<BackContentVo> backContentVos = new ArrayList<>();
 
-        List<Article> articles1 = null;
+        if (!CollectionUtils.isEmpty(articles)) {
+            for (Article article : articles) {
 
-        if (articles.size() >= 10) {
+                BackContentVo backContentVo = new BackContentVo();
 
-            articles1 = articles.subList(0, 9);
-        } else {
-
-            articles1 = articles;
-        }
-
-        if (articles1 != null) {
-            for (Article article : articles1) {
                 if (article.getAuthorName().contains(key)) {
-                    BackContentVo backContentVo = new BackContentVo();
                     backContentVo.setType("author_name");
                     backContentVo.setContent(article.getAuthorName());
-                    backContentVos.add(backContentVo);
-                } else if (article.getTitle().contains(key)) {
-                    BackContentVo backContentVo = new BackContentVo();
+                }
+                if (article.getTitle().contains(key)) {
                     backContentVo.setType("title");
                     backContentVo.setContent(article.getTitle());
-                    backContentVos.add(backContentVo);
-                } else if (article.getSummary().contains(key)) {
-                    BackContentVo backContentVo = new BackContentVo();
+                }
+                if (article.getSummary().contains(key)) {
                     backContentVo.setType("summary");
                     backContentVo.setContent(article.getSummary());
-                    backContentVos.add(backContentVo);
                 }
+                backContentVos.add(backContentVo);
             }
         }
-
         return backContentVos;
 
     }
 
     @Override
-    public Map<String, List<String>> getLabel(Integer userId) {
+    public List<String> getLabels(Integer userId, boolean isAdmin) {
 
-        User user = getUserById(userId);
+        List<String> list = new ArrayList<>();
 
-        ArrayList<String> sorts = new ArrayList<>();
-        HashMap<String, List<String>> map = new HashMap<>();
-
-        if (user.getAuthority().equals(UserAuthorityEnum.Admin.getAuthority()) || user.getAuthority().contains(UserAuthorityEnum.Admin.getAuthority())) {
-
-            sorts.add("Notices");
-            sorts.add("Activities");
-
-            map.put("label", sorts);
-            return map;
+        if (isAdmin) {
+            for (LabelEnum label : LabelEnum.values()) {
+                list.add(label.getDes());
+            }
         } else {
-
-            ArticleExample articleExample = new ArticleExample();
-            ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
-            articleExampleCriteria.andIdGreaterThanOrEqualTo(1);
-
-            List<Article> articles = articleDao.selectByExample(articleExample);
-
-            for (Article article : articles) {
-
-                String label1 = article.getLabel().replace(" ", "");
-                String label2 = label1.substring(1, label1.length() - 1);
-                String[] split = label2.split(",");
-
-                for (String s : split) {
-                    if (!sorts.contains(s)) {
-                        sorts.add(s);
-                    }
+            for (LabelEnum label : LabelEnum.values()) {
+                if (!label.isAdminLabel()) {
+                    list.add(label.getDes());
                 }
             }
-            map.put("label", sorts);
-            return map;
         }
+
+        return list;
+
     }
 
     @Override
-    public ArticleWithComments getDetailMsgOfArticleByArticleId(Integer id) {
+    public void updateAtricleLikesByArticleId(Integer articleId, boolean flag) {
 
+        int updateLikes = flag ? 1 : -1;
+
+        Article article = articleDao.selectByPrimaryKey(articleId);
+
+        article.setLikes(article.getLikes() + updateLikes);
+
+        articleDao.updateByPrimaryKeySelective(article);
+
+    }
+
+    @Override
+    public Article getNotDeletedArticleByArticleId(int id) {
         Article article = articleDao.selectByPrimaryKey(id);
-        if (article.getIsDeleted() == 0) {
-            return null;
-        }
+
         if (article == null) {
-            throw new MyException("该文章不存在");
+            throw new MyException(ErrorConstant.Article.ARTICLE_IS_NOT_FOUND);
         }
-        Integer authorId = article.getAuthorId();
-        User user = userDao.selectByPrimaryKey(authorId);
-
-        CommentExample commentExample = new CommentExample();
-        CommentExample.Criteria commentExampleCriteria = commentExample.createCriteria();
-        commentExampleCriteria.andArticleIdEqualTo(id);
-        List<Comment> comments = commentDao.selectByExample(commentExample);
-
-        ArrayList<CommentVo> commentVos = new ArrayList<>();
-
-        for (Comment comment : comments) {
-            commentVos.add(new CommentVo(comment.getUserUsername(),
-                    comment.getContent(),
-                    comment.getCommentTime(),
-                    userDao.selectByPrimaryKey(comment.getUserId()).getFigureUrl()));
+        if (article.getIsDeleted() == 1) {
+            throw new MyException(ErrorConstant.Article.ARTICLE_IS_DELETED);
         }
 
-        ArticleWithComments articleWithComments = new ArticleWithComments(
-                user.getUsername(),
-                user.getFigureUrl(),
-                id, article.getLikes(),
-                article.getViews().toString(),
-                article.getText(),
-                article.getLabel(),
-                commentVos
-        );
+        return article;
+    }
 
-        return articleWithComments;
+    @Override
+    public List<Article> listArticleByList(List<Integer> delArticle) {
+
+        ArticleExample example = new ArticleExample();
+        example.createCriteria().andIdIn(delArticle);
+
+        List<Article> articleList = articleDao.selectByExample(example);
+
+        return articleList;
+    }
+
+    @Override
+    public ArticleVo getNotDeletedArticleVoByArticleId(int articleId) {
+
+        Article article = getNotDeletedArticleByArticleId(articleId);
+
+        ArticleVo articleVo = new ArticleVo(article);
+
+        User user = userDao.selectByPrimaryKey(article.getAuthorId());
+        if(user.getIsDeleted() == 1){
+            articleVo.setAuthorName(DefaultConstant.User.DELETED_USER_USERNAME);
+            articleVo.setAuthorFigureUrl(DefaultConstant.User.USER_FIGURE_URL);
+        }else {
+            articleVo.setAuthorName(user.getUsername());
+            articleVo.setAuthorFigureUrl(user.getFigureUrl());
+        }
+
+        return articleVo;
+
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteArticlesByUserIdAndDelList(List<Integer> delArticleIdList, Integer userId) {
+
+        ArticleExample example = new ArticleExample();
+        example.createCriteria()
+                .andAuthorIdEqualTo(userId)
+                .andIdIn(delArticleIdList);
+
+        Article article = new Article();
+        article.setIsDeleted((byte) 1);
+
+        articleDao.updateByExampleSelective(article, example);
 
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteArticlesByUser(List<Integer> delArticleIdList, Integer userId) {
+    public void putArticlesByUser(int authorId, int articleId, String text, String title, String label) {
 
-        User user = getUserById(userId);
-        String username = user.getUsername();
-
-        if (user.getAuthority().equals(UserAuthorityEnum.Admin.getAuthority())) {
-
-            if (delArticleIdList.size() == 0 || delArticleIdList == null) {
-                throw new MyException("没有选择公告或文章Id");
-            }
-
-            ArticleExample articleExample = new ArticleExample();
-            ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
-            articleExampleCriteria.andAuthorNameEqualTo(username);
-            articleExampleCriteria.andAuthorIdEqualTo(userId);
-            articleExampleCriteria.andIdIn(delArticleIdList);
-
-//            ArticleExample articleExample1 = new ArticleExample();
-//            ArticleExample.Criteria criteria1 = articleExample1.createCriteria();
-//            criteria1.andTypeEqualTo(ArticleTypeEnum.ACTIVITY.getType());
-//
-//            ArticleExample articleExample2 = new ArticleExample();
-//            ArticleExample.Criteria criteria2 = articleExample2.createCriteria();
-//            criteria2.andTypeEqualTo(ArticleTypeEnum.NOTICE.getType());
-
-//            articleExample1.or(criteria2);
-//            articleExample.or(criteria1);
-
-            Article article = new Article();
-
-            article.setIsDeleted(Byte.parseByte("0"));
-
-            Integer count = articleDao.updateByExampleSelective(article, articleExample);
-
-            if (count != delArticleIdList.size()) {
-                throw new MyException("管理删除公告或文章失败");
-            }
-
-            log.info("管理删除公告或文章成功");
-
-        } else {
-
-            if (delArticleIdList.size() == 0 || delArticleIdList == null) {
-                throw new MyException("没有选择文章Id");
-            }
-
-            ArticleExample articleExample = new ArticleExample();
-            ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
-            articleExampleCriteria.andIdIn(delArticleIdList);
-            articleExampleCriteria.andAuthorIdEqualTo(userId);
-            articleExampleCriteria.andTypeEqualTo(ArticleTypeEnum.QUESTION.getType());
-            articleExampleCriteria.andAuthorNameEqualTo(username);
-
-            Article article = new Article();
-            article.setIsDeleted(Byte.parseByte("0"));
-
-            Integer count = articleDao.updateByExampleSelective(article, articleExample);
-
-            if (count != delArticleIdList.size()) {
-                throw new MyException("删除文章失败");
-            }
-
-            log.info("文章删除成功");
-        }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void putArticlesByUser(String authorId, String articleId, String text, String title, String label) {
-
-        User user = getUserById(Integer.parseInt(authorId));
+        User user = getUserById(authorId);
 
         ArticleExample articleExample = new ArticleExample();
         ArticleExample.Criteria articleExampleCriteria = articleExample.createCriteria();
-        articleExampleCriteria.andIdEqualTo(Integer.parseInt(articleId));
-        articleExampleCriteria.andAuthorIdEqualTo(Integer.parseInt(authorId));
+        articleExampleCriteria.andIdEqualTo(articleId);
+        articleExampleCriteria.andAuthorIdEqualTo(authorId);
 
         Article article = new Article();
-        article.setAuthorId(Integer.parseInt(authorId));
-        article.setId(Integer.parseInt(articleId));
+        article.setAuthorId(authorId);
+        article.setId(articleId);
         article.setText(text);
         article.setTitle(title);
         article.setLabel(label);
 
-        if (user.getAuthority().equals(UserAuthorityEnum.Admin.getAuthority()) || user.getAuthority().contains(UserAuthorityEnum.Admin.getAuthority())) {
+        if (user.getAuthority().contains(RoleEnum.ROLE_ADMIN.toString())) {
 
             Integer count = articleDao.updateByExampleSelective(article, articleExample);
 
@@ -335,16 +268,19 @@ public class ArticleServiceImp implements ArticleService {
         Date date = new Date();
         Article article = new Article();
         article.setAuthorName(user.getUsername());
-        article.setLabel(label.toString());
+        article.setLabel(label
+                .toString()
+                .replace("[", "")
+                .replace("]", ""));
         article.setAuthorId(authorId);
         article.setTitle(title);
-        article.setText(text);
+        article.setText(MyUtils.markdownToHtml(text));
         article.setSummary(sumamry);
         article.setCoverUrl(coverUrl);
         article.setLastModified(date);
         article.setReleaseTime(date);
         article.setIsDeleted(Byte.parseByte("0"));
-        article.setType("question");
+        article.setType("");
         Integer count = articleDao.insertSelective(article);
         if (count == 0) {
             throw new MyException("添加文章失败");
@@ -374,76 +310,4 @@ public class ArticleServiceImp implements ArticleService {
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void postLikesByUser(Integer userId, Integer articleId) {
-
-        LikeExample likeExample = new LikeExample();
-        LikeExample.Criteria criteria = likeExample.createCriteria();
-        criteria.andArticleIdEqualTo(articleId);
-        criteria.andUserIdEqualTo(userId);
-
-        Like like = (Like) likeDao.selectByExample(likeExample);
-
-        Article article = articleDao.selectByPrimaryKey(articleId);
-
-        Article articleTo = new Article();
-        articleTo.setId(articleId);
-
-        Like like1 = new Like();
-        if (like == null) {
-            like1.setArticleId(articleId);
-            like1.setUserId(userId);
-            like1.setIsLike(Byte.parseByte("1"));
-
-            Integer count = likeDao.insertSelective(like1);
-
-            if (count != 1) {
-                throw new MyException("点赞失败");
-            }
-            articleTo.setLikes(article.getLikes() + 1);
-
-            int i = articleDao.updateByPrimaryKeySelective(articleTo);
-
-            if (i != 1) {
-                throw new MyException("点赞失败");
-            }
-
-            log.info("点赞成功");
-
-        }
-        else {
-            if (like.getIsLike() == 1) {
-                like1.setIsLike(Byte.parseByte("0"));
-                Integer count = likeDao.updateByPrimaryKeySelective(like1);
-
-                if (count != 1) {
-                    throw new MyException("取消点赞失败");
-                }
-
-                articleTo.setLikes(article.getLikes() - 1);
-                int i = articleDao.updateByPrimaryKeySelective(articleTo);
-
-                if (i != 1) {
-                    throw new MyException("取消点赞失败");
-                }
-                log.info("取消点赞成功");
-            } else {
-                like1.setIsLike(Byte.parseByte("1"));
-                int count = likeDao.updateByPrimaryKeySelective(like1);
-                if (count != 1) {
-                    throw new MyException("点赞失败");
-                }
-
-                articleTo.setLikes(article.getLikes());
-                int i = articleDao.updateByPrimaryKeySelective(articleTo);
-
-                if (i != 1) {
-                    throw new MyException("点赞失败");
-                }
-
-                log.info("点赞成功");
-            }
-        }
-    }
 }

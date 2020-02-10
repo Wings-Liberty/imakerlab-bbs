@@ -1,8 +1,8 @@
 package cn.imakerlab.bbs.security.config;
 
-import cn.imakerlab.bbs.security.AuthExceptionEntryPoint;
+import cn.imakerlab.bbs.security.handler.AuthExceptionEntryPoint;
+import cn.imakerlab.bbs.security.handler.SimpleAccessDeniedHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -28,6 +28,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources.authenticationEntryPoint(new AuthExceptionEntryPoint());
+        resources.authenticationEntryPoint(new AuthExceptionEntryPoint())
+        .accessDeniedHandler(new SimpleAccessDeniedHandler());
     }
 }

@@ -31,7 +31,7 @@ public enum ArticleTypeEnum {
 
     public static ArticleTypeEnum getArticleTypeEnumByType(String type) {
         for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
-            if (value.getType() == type) {
+            if (value.getType().equals(type)) {
                 return value;
             }
         }

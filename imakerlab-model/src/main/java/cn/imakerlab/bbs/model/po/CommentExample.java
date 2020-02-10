@@ -571,6 +571,66 @@ public class CommentExample {
             addCriterion("comment.is_deleted not between", value1, value2, "isDeleted");
             return (Criteria) this;
         }
+
+        public Criteria andIsEffectArticleIsNull() {
+            addCriterion("comment.is_effect_article is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleIsNotNull() {
+            addCriterion("comment.is_effect_article is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleEqualTo(Byte value) {
+            addCriterion("comment.is_effect_article =", value, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleNotEqualTo(Byte value) {
+            addCriterion("comment.is_effect_article <>", value, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleGreaterThan(Byte value) {
+            addCriterion("comment.is_effect_article >", value, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleGreaterThanOrEqualTo(Byte value) {
+            addCriterion("comment.is_effect_article >=", value, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleLessThan(Byte value) {
+            addCriterion("comment.is_effect_article <", value, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleLessThanOrEqualTo(Byte value) {
+            addCriterion("comment.is_effect_article <=", value, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleIn(List<Byte> values) {
+            addCriterion("comment.is_effect_article in", values, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleNotIn(List<Byte> values) {
+            addCriterion("comment.is_effect_article not in", values, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleBetween(Byte value1, Byte value2) {
+            addCriterion("comment.is_effect_article between", value1, value2, "isEffectArticle");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEffectArticleNotBetween(Byte value1, Byte value2) {
+            addCriterion("comment.is_effect_article not between", value1, value2, "isEffectArticle");
+            return (Criteria) this;
+        }
     }
 
     /**

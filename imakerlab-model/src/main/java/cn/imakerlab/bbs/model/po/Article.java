@@ -51,9 +51,6 @@ public class Article implements Serializable {
     /**
      * 发布时间
      */
-
-
-
     private Date releaseTime;
 
     /**

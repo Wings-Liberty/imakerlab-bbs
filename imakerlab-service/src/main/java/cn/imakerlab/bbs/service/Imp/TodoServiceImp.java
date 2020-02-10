@@ -1,6 +1,9 @@
 package cn.imakerlab.bbs.service.Imp;
 
+import cn.imakerlab.bbs.constant.DefaultConstant;
 import cn.imakerlab.bbs.mapper.TodoDao;
+import cn.imakerlab.bbs.mapper.UserDao;
+import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.po.Todo;
 import cn.imakerlab.bbs.model.po.TodoExample;
 import cn.imakerlab.bbs.service.TodoService;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -20,18 +24,24 @@ public class TodoServiceImp implements TodoService {
     TodoDao todoDao;
 
     @Override
-    public List<Todo> getTodoListByUserId(Integer id) {
+    public List<Todo> listNotDeletedTodoListByUserId(Integer id) {
 
         TodoExample example = new TodoExample();
-        example.createCriteria().andUserIdEqualTo(id);
+        example.createCriteria()
+                .andUserIdEqualTo(id)
+                .andIsDeletedEqualTo((byte) 0);
 
         List<Todo> list = todoDao.selectByExample(example);
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
 
         return list;
     }
 
     @Override
-    public void modifyTodoById(int userId, Todo todo) {
+    public void updateTodoById(int userId, Todo todo) {
 
         TodoExample example = new TodoExample();
         example.createCriteria().andIdEqualTo(todo.getId()).andUserIdEqualTo(userId);
@@ -41,7 +51,11 @@ public class TodoServiceImp implements TodoService {
     }
 
     @Override
-    public void addTodoByUserId(int userId, Todo todo) {
+    public void insertTodoByUserId(int userId, Todo todo) {
+
+        todo.setIsDeleted((byte) 0);
+        todo.setStatus((byte) 0);
+        todo.setUserId(userId);
 
         todoDao.insertSelective(todo);
 
@@ -57,5 +71,22 @@ public class TodoServiceImp implements TodoService {
         todo.setIsDeleted((byte) 1);
 
         todoDao.updateByExampleSelective(todo, example);
+    }
+
+    @Override
+    public boolean isEnableAddTodoCurrentUser(int userId) {
+        boolean isEnableAddTodo = false;
+
+        TodoExample example = new TodoExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+
+        if (DefaultConstant.User.USER_TODO_MAX_COUNT < todoDao.countByExample(example)) {
+            log.info("该用户的todo持有数量达到上限，不能再添加todo");
+        } else {
+            isEnableAddTodo = true;
+        }
+
+        return isEnableAddTodo;
+
     }
 }

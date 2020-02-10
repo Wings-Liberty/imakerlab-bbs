@@ -5,7 +5,6 @@ import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.TestServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
-import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,15 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -41,14 +39,23 @@ public class TestController {
     @Autowired
     UserDao userDao;
 
-    @GetMapping("/admin/test")
+    @GetMapping("/test")
     @ResponseBody
-    public ResultUtils admin(){
-        String string = "成功访问到了管理员接口";
+    public ResultUtils admin(@RequestBody List<Integer> list){
 
-        System.out.println(string);
+        System.out.println(list.size());
 
-        return ResultUtils.success().setMsg(string);
+        return ResultUtils.success();
+
+    }
+
+    @GetMapping("/test2")
+    @ResponseBody
+    public ResultUtils test2(@RequestBody int id){
+
+        System.out.println(id);
+
+        return ResultUtils.success();
 
     }
 
@@ -81,15 +88,17 @@ public class TestController {
         return claims;
     }
 
-    @GetMapping("/me2")
+    @GetMapping("/test/pojo")
     @ResponseBody
-    public ResultUtils userList(HttpServletRequest request){
+    public User getUser(User user){
+        System.out.println("user.getId " + user.getId());
+        System.out.println("user.getUsername " + user.getUsername());
+        System.out.println("user.getPassword " + user.getPassword());
+        System.out.println("user.getIsDeleted " + user.getIsDeleted());
+        System.out.println("user.getFigureUrl " + user.getFigureUrl());
+        System.out.println("user " +user);
 
-        Integer id = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
-
-        System.out.println(id);
-
-        return ResultUtils.success().setData(id);
+        return user;
 
     }
 

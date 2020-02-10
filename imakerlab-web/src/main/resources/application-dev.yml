@@ -29,6 +29,5 @@ mybatis:
   type-aliases-package: cn.imakerlab.bbs.model
 pagehelper:
   reasonable: true
-
   supportMethodsArguments: true
   pageSizeZero: false #pageSize=0

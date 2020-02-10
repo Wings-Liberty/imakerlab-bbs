@@ -1,21 +1,21 @@
-package cn.imakerlab.bbs.constant;
+package cn.imakerlab.bbs.enums;
 
 public enum FileUploadEnum {
-    FIGURE("figure", 1024*1024, "E:\\upload"),
-    PICTURE("figure", 1024*1024*3, "E:\\upload");
+    FIGURE("figure", 1024*1024, "D:\\IDEA-workspace\\imakerlab-bbs\\imakerlab-web\\src\\main\\resources\\static\\uploadfile"),
+    PICTURE("picture", 1024*1024*3, "D:\\IDEA-workspace\\imakerlab-bbs\\imakerlab-web\\src\\main\\resources\\static\\uploadfile");
 
     private String value;
     private Integer maxSize;
     private String uploadUrl;
 
     FileUploadEnum(String value, Integer maxSize, String uploadUrl) {
-        this.value=value;
-        this.maxSize=maxSize;
-        this.uploadUrl=uploadUrl;
+        this.value = value;
+        this.maxSize = maxSize;
+        this.uploadUrl = uploadUrl;
     }
 
     public String getValue() {
-        return value;
+        return this.value;
     }
 
     public void setValue(String value) {
@@ -23,7 +23,7 @@ public enum FileUploadEnum {
     }
 
     public Integer getMaxSize() {
-        return maxSize;
+        return this.maxSize;
     }
 
     public void setMaxSize(Integer maxSize) {

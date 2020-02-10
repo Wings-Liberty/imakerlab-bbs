@@ -18,7 +18,7 @@ public class MyExeceptionTranslator implements WebResponseExceptionTranslator {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public ResponseEntity translate(Exception e) throws Exception {
+    public ResponseEntity translate(Exception e) {
 
         logger.info(e.getMessage());
 
