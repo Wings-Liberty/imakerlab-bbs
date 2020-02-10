@@ -1,25 +1,23 @@
 package cn.imakerlab.bbs.test;
 
 import org.junit.Test;
+import org.springframework.util.ResourceUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class testJava {
 
     @Test
     public void test() {
 
-        List<Integer> list1 = new ArrayList<>();
-        list1.add(1);
+        try {
+            File path = new File(ResourceUtils.getURL("classpath:").getPath());
+            System.out.println(path.getAbsolutePath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        List<Integer> list2 = new ArrayList<>();
-        list1.add(2);
-
-        List<Integer> list = new ArrayList<>();
-        list1.addAll(list2);
-
-        System.out.println(list1);
 
     }
 

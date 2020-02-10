@@ -1,10 +1,12 @@
 package cn.imakerlab.bbs.web.controller;
 
+import cn.imakerlab.bbs.enums.FileUploadEnum;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.TestServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
+import cn.imakerlab.bbs.utils.MyUtils;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,10 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -38,6 +38,19 @@ public class TestController {
 
     @Autowired
     UserDao userDao;
+
+
+    @PostMapping("/test/upload")
+    @ResponseBody
+    public ResultUtils upload(MultipartFile file){
+
+        String string = MyUtils.testUpload(file, FileUploadEnum.FIGURE);
+
+        System.out.println("文件存放在了 " + string);
+
+        return ResultUtils.success();
+
+    }
 
     @GetMapping("/test")
     @ResponseBody

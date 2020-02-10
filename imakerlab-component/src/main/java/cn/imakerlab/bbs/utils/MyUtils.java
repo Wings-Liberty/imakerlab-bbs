@@ -9,11 +9,14 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +36,36 @@ public class MyUtils {
         } else {
             throw new MyException("MyUtils的ListToOne方法抛出的异常，因为希望获取到的list弟弟size大于1");
         }
+
+    }
+
+    public static String testUpload(MultipartFile file, FileUploadEnum fileUploadEnum){
+
+        File path = null;
+        try {
+            path = new File(ResourceUtils.getURL("classpath:").getPath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(!path.exists()) {
+            path = new File("");
+        }
+
+        File upload = new File(path.getAbsolutePath(),"static/upload/");
+        if(!upload.exists()) {
+            upload.mkdirs();
+        }
+
+        String fileName = UUID.randomUUID().toString() + file.getOriginalFilename();
+        try {
+            file.transferTo(new File(path.getAbsoluteFile() + "/static/upload/", fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("错了");
+        }
+
+
+        return path.getAbsoluteFile() + "/static/upload/" + fileName;
 
     }
 
