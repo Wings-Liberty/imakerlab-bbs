@@ -20,10 +20,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/admin/users").hasRole("ADMIN")
-                .anyRequest()
-                .authenticated();
+//                .antMatchers("/register").permitAll()
+//                .antMatchers("/admin/users").hasRole("ADMIN")
+                .anyRequest().permitAll();
+//                .authenticated();
     }
 
     @Override

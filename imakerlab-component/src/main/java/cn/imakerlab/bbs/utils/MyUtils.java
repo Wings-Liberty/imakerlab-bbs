@@ -28,16 +28,18 @@ public class MyUtils {
 
     public static String uplode(MultipartFile file, FileUploadEnum fileUploadEnum) {
 
+
         //判断文件是否符合该文件形式下的文件大小限制
 
         if (file.isEmpty()) {
+
             throw new MyException(ErrorConstant.File.FILE_IS_EMPTY);
         }
 
         if(file.getSize() > fileUploadEnum.getMaxSize()){
             throw new MyException(ErrorConstant.File.FILE_SIZE_EXCEEDS);
         }
-
+        System.out.println(".....");
         //符合标准后，上传文件
 
         // 获取文件名
@@ -46,12 +48,14 @@ public class MyUtils {
         String basePath = fileUploadEnum.getUploadUrl();
 
         //判断路径是否存在，文件夹
-        File uploadFile = new File(basePath);
+        File uploadFile = new File("E:\\upload");
         if (!uploadFile.exists()) {
 
             uploadFile.mkdirs();
         }
         //把file文件以指定文件名传到指定位置
+
+
         try {
             file.transferTo(new File(uploadFile, fileName));
         } catch (IOException e) {
