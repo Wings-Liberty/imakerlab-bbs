@@ -194,14 +194,14 @@ public class UserController {
     public ResultUtils uploadFigure(@RequestParam(required = true) MultipartFile file,
                                     HttpServletRequest request) {
 
-        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+//        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
 
         //上传头像
         String figureUrl = MyUtils.uplode(file, FileUploadEnum.FIGURE);
-        log.info("id为" + userId + "的用户:" + "把头像保存在" + figureUrl);
+//        log.info("id为" + userId + "的用户:" + "把头像保存在" + figureUrl);
 
         //把头像的url存入数据库
-        userService.setFigureUrl(figureUrl, userId);
+        userService.setFigureUrl(figureUrl, 3);
 
         return ResultUtils.success();
     }

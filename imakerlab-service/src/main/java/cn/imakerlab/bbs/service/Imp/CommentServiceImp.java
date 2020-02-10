@@ -43,7 +43,7 @@ public class CommentServiceImp implements CommentService {
         }
 
         Comment comment = new Comment();
-        comment.setArticleId(articleId);
+        comment.setArticleId(Integer.parseInt(articleId));
         comment.setCommentTime(new Date());
         comment.setContent(content);
         comment.setIsDeleted(Byte.parseByte("0"));
@@ -67,7 +67,7 @@ public class CommentServiceImp implements CommentService {
 
         Comment comment = commentDao.selectByPrimaryKey(id);
 
-        if (comment.getArticleId()!=articleId){
+        if (comment.getArticleId()!=Integer.parseInt(articleId)){
             throw new MyException("文章id与评论id不符");
         }
 
