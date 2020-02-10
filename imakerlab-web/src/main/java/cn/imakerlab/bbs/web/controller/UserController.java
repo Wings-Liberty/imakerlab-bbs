@@ -2,40 +2,28 @@ package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.constant.DefaultConstant;
 import cn.imakerlab.bbs.constant.ErrorConstant;
-import cn.imakerlab.bbs.constant.FileUploadEnum;
+import cn.imakerlab.bbs.enums.FileUploadEnum;
 import cn.imakerlab.bbs.model.exception.MyException;
-import cn.imakerlab.bbs.model.po.ContributionMap;
 import cn.imakerlab.bbs.model.vo.UserVo;
 import cn.imakerlab.bbs.security.utils.SecurityUtils;
-import cn.imakerlab.bbs.service.Imp.ContributionMapServiceImp;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;
 import cn.imakerlab.bbs.utils.MyUtils;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
 public class UserController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     UserServiceImp userService;
-
-    @Autowired
-    ContributionMapServiceImp contributionMapService;
 
     /**
      * @api {POST} /oauth/token 登录（获取令牌/刷新令牌）
@@ -115,56 +103,40 @@ public class UserController {
      */
     @PostMapping("/register")
     @ResponseBody
-    public ResultUtils register(@Valid UserVo userVo) {
+    public ResultUtils register(@RequestParam String username,
+                                @RequestParam String password) {
 
-        userService.register(userVo);
+        userService.register(username, password);
+        log.info("注册成功");
 
         return ResultUtils.success();
     }
 
     /**
-     * @api {GET} /user 获取用户信息
-     * @apiHeader {String} Bearer 令牌
-     * @apiVersion 1.0.0
-     * @apiGroup 用户
-     * @apiName getUser
-     * @apiDescription 获取用户信息。因为现在user表里信息很少，所以接口暂时把获取用户公开信息和获取用户私密信息的接口和位一个接口
-     * @apiSuccess (响应结果) {Number} id 用户id
-     * @apiSuccess (响应结果) {String} username 用户名
-     * @apiSuccess (响应结果) {String} password 密码。这里获取的密码是不可见的
-     * @apiSuccess (响应结果) {String} figureUrl 头像的url，图片存后端文件夹里
-     * @apiSuccess (响应结果) {String} slogan 标语/个性签名
-     * @apiSuccessExample 成功响应结果示例
-     * {"password":"","figureUrl":"/figuer/user1","id":4910,"slogan":"我是个性签名","username":"我是用户名"}
-     * @apiErrorExample 令牌过期响应结果示例
-     * {
-     * "code": 100,
-     * "msg": "令牌已过期",
-     * "data": ""
-     * }
+     * 通过id获取单个用户信息，如果不传id，就获取当前登录用户的用户信息
+     *
+     * @param idStr   用户id
+     * @param request
+     * @return
      */
-    @GetMapping("/user")
+    @GetMapping({"/user/{idStr}", "/user"})
     @ResponseBody
-    public ResultUtils getUser(HttpServletRequest request) {
+    public ResultUtils getUserById(@PathVariable(required = false) String idStr,
+                                   HttpServletRequest request) {
 
-        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+        int userId;
 
-        log.info("从数据库获取user");
-        UserVo userVo = userService.getUserVoById(userId);
-        return ResultUtils.success().setData(userVo);
-    }
+        if (StringUtils.isEmpty(idStr)) {
+            userId = SecurityUtils.getUserIdFromRequest(request);
+            log.info("查询（id=" + userId + "）别人的信息");
+        } else {
+            userId = Integer.parseInt(idStr);
+            log.info("查询（id=" + userId + "）当前登录用户的信息");
+        }
 
+        UserVo userVo = userService.getNotDeleteedUserVoById(userId);
 
-
-    @GetMapping("/user/{id}")
-    @ResponseBody
-    public ResultUtils getUserById(@PathVariable String id) {
-
-        int userId = Integer.parseInt(id);
-
-        UserVo userVo = userService.getUserVoById(userId);
-
-        return ResultUtils.success().setData(userVo);
+        return ResultUtils.success(userVo);
 
     }
 
@@ -189,15 +161,24 @@ public class UserController {
      * "data": ""
      * }
      */
-    @PutMapping("/figure")
+    /**
+     * 上传头像
+     * 接收的图片有大小限制，但暂时没有检查文件是不是图片文件
+     *
+     * @param file
+     * @param request
+     * @return
+     */
+    @PostMapping("/figure")
     @ResponseBody
-    public ResultUtils uploadFigure(@RequestParam(required = true) MultipartFile file,
+    public ResultUtils uploadFigure(MultipartFile file,
                                     HttpServletRequest request) {
 
-        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+        int userId = SecurityUtils.getUserIdFromRequest(request);
 
         //上传头像
         String figureUrl = MyUtils.uplode(file, FileUploadEnum.FIGURE);
+
         log.info("id为" + userId + "的用户:" + "把头像保存在" + figureUrl);
 
         //把头像的url存入数据库
@@ -221,57 +202,51 @@ public class UserController {
      * @apiSuccessExample 响应结果示例
      * {"msg":"成功","code":200,"body":{}}
      */
-    @PutMapping("/user")
+    /**
+     * 修改用户名和个签
+     *
+     * @param newSlogan
+     * @param newUsername
+     * @param request
+     * @return
+     */
+    @PostMapping("/user")
     @ResponseBody
     public ResultUtils setSloganOrUsername(
-           @RequestParam(required = true)
-                    String newSlogan,
-            @RequestParam(required = true)
-                    String newUsername,
+            @RequestParam String newSlogan,
+            @RequestParam String newUsername,
             HttpServletRequest request) {
 
-        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+        int userId = SecurityUtils.getUserIdFromRequest(request);
 
-        if (userService.isExistUsername(newUsername)) {
-            throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
-        } else if (newUsername.length() > DefaultConstant.User.USER_NAME_MAX_LENGTH) {
-            throw new MyException(ErrorConstant.User.USER_SLOGAN_SIZE_EXECEEDS);
-        } else if (!java.util.regex.Pattern.matches("([a-z]|[A-Z]|[0-9]|[\\u4e00-\\u9fa5])+.*", newUsername)) {
-            throw new MyException("用户名格式违法，正确格式为字母，汉字，数字开头");
-        }
+        /*
+         检查新的用户名格式是否符合正则表达式
+         检查个签长度
+         */
 
-        if (newSlogan.length() > DefaultConstant.User.USER_SLOGAN_MAX_LENGTH) {
-            throw new MyException(ErrorConstant.User.USER_SLOGAN_SIZE_EXECEEDS);
-        }
-
-
-        userService.setSloganAndUsername(userId, newSlogan, newUsername);
+        userService.setSloganAndUsernameByUserId(userId, newSlogan, newUsername);
 
         return ResultUtils.success();
     }
 
-    @GetMapping("/calendar/{userIdStr}")
-    @ResponseBody
-    public ResultUtils getCalendar(@PathVariable String userIdStr){
-        Integer userId = Integer.parseInt(userIdStr);
 
-        List<ContributionMap> list = contributionMapService.getCalendarByUserId(userId);
-
-        Map map = new HashMap();
-        map.put("set", list);
-
-        return ResultUtils.success().setData(map);
-    }
-
+    /**
+     * 修改密码
+     *
+     * @param oldPassword
+     * @param newPassword
+     * @param request
+     * @return
+     */
     @PutMapping("/user/password")
     @ResponseBody
-    public ResultUtils modifyPassword(@RequestParam(required = true) String oldPassword,
-                                      @RequestParam(required = true) String newPassword,
-                                      HttpServletRequest request){
+    public ResultUtils modifyPassword(@RequestParam String oldPassword,
+                                      @RequestParam String newPassword,
+                                      HttpServletRequest request) {
 
-        int userId = SecurityUtils.getUserIdFromAuthenticationByRequest(request);
+        int userId = SecurityUtils.getUserIdFromRequest(request);
 
-        userService.modifyByUserId(userId, oldPassword, newPassword);
+        userService.updatePasswordByUserId(userId, oldPassword, newPassword);
 
         return ResultUtils.success();
 

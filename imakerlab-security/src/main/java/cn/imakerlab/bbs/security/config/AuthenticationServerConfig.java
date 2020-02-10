@@ -47,7 +47,7 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
     private TokenEnhancer jwtTokenEnhancer;
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
                 .userDetailsService(userDetailsService)
                 .authenticationManager(authenticationManager);
@@ -76,8 +76,8 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
                 .withClient("imaker") //配置client-id
                 .secret(passwordEncoder.encode("imaker")) //配置client-secret
                 .authorizedGrantTypes("refresh_token", "password") //设置申请token的方式（只能从默认的五种方式里选），此后只能使用设定的方式申请token
-                .accessTokenValiditySeconds(3660) //设置令牌有效期3600秒
-                .refreshTokenValiditySeconds(3600 * 24) //设置刷新令牌的有效期是一天
+                .accessTokenValiditySeconds(3600*24) //设置令牌有效期3600秒
+                .refreshTokenValiditySeconds(3600*24) //设置刷新令牌的有效期是一天
                 .scopes("all", "read", "write"); //设置用户能获得的权限都有哪些
 
     }

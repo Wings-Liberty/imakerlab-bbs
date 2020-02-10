@@ -1,15 +1,26 @@
 package cn.imakerlab.bbs.test;
 
-import cn.imakerlab.bbs.enums.ArticleTypeEnum;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class testJava {
 
     @Test
     public void test() {
-        for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
-            System.out.println(value);
-        }
+
+        List<Integer> list1 = new ArrayList<>();
+        list1.add(1);
+
+        List<Integer> list2 = new ArrayList<>();
+        list1.add(2);
+
+        List<Integer> list = new ArrayList<>();
+        list1.addAll(list2);
+
+        System.out.println(list1);
+
     }
 
 }

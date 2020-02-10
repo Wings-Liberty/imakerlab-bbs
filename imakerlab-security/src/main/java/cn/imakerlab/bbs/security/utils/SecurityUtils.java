@@ -10,8 +10,25 @@ import java.io.UnsupportedEncodingException;
 
 public class SecurityUtils {
 
-    public static int getUserIdFromAuthenticationByRequest(HttpServletRequest request){
+    public static int getUserIdFromRequest(HttpServletRequest request){
 
+        Claims claims = getClaimFromRequest(request);
+
+        Integer userId = Integer.parseInt(claims.get("userId").toString());
+
+        return userId;
+    }
+
+    public static String getUserAuthorityFromRequest(HttpServletRequest request){
+
+        Claims claims = getClaimFromRequest(request);
+
+        String authority = (String) claims.get("authority");
+
+        return authority;
+    }
+
+    public static Claims getClaimFromRequest(HttpServletRequest request){
         String header = request.getHeader("Authorization");
 
         //这里的Bearer不能忽略大小写
@@ -27,11 +44,7 @@ public class SecurityUtils {
             throw new MyException("账号未登录或账号信息过期，请先登录");
         }
 
-        System.out.println("claims : " + claims);
-
-        Integer userId = (Integer) claims.get("userId");
-
-        return userId;
+        return claims;
     }
 
 }

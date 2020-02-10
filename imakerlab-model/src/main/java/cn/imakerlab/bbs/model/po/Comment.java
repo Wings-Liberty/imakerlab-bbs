@@ -45,5 +45,10 @@ public class Comment implements Serializable {
      */
     private Byte isDeleted;
 
+    /**
+     * 该条评论是否作用于文章。1——作用于文章，2——作用于其他评论
+     */
+    private Byte isEffectArticle;
+
     private static final long serialVersionUID = 1L;
 }
