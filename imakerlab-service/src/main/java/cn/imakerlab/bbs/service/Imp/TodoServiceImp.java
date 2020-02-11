@@ -1,9 +1,7 @@
 package cn.imakerlab.bbs.service.Imp;
 
-import cn.imakerlab.bbs.constant.DefaultConstant;
+import cn.imakerlab.bbs.constant.DefaultConsts;
 import cn.imakerlab.bbs.mapper.TodoDao;
-import cn.imakerlab.bbs.mapper.UserDao;
-import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.po.Todo;
 import cn.imakerlab.bbs.model.po.TodoExample;
 import cn.imakerlab.bbs.service.TodoService;
@@ -80,7 +78,7 @@ public class TodoServiceImp implements TodoService {
         TodoExample example = new TodoExample();
         example.createCriteria().andUserIdEqualTo(userId);
 
-        if (DefaultConstant.User.USER_TODO_MAX_COUNT < todoDao.countByExample(example)) {
+        if (DefaultConsts.User.USER_TODO_MAX_COUNT < todoDao.countByExample(example)) {
             log.info("该用户的todo持有数量达到上限，不能再添加todo");
         } else {
             isEnableAddTodo = true;

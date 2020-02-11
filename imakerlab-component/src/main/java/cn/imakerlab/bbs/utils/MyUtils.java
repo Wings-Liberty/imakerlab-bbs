@@ -1,7 +1,7 @@
 package cn.imakerlab.bbs.utils;
 
-import cn.imakerlab.bbs.constant.DefaultConstant;
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.DefaultConsts;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import cn.imakerlab.bbs.enums.FileUploadEnum;
 import cn.imakerlab.bbs.model.exception.MyException;
 import com.vladsch.flexmark.html.HtmlRenderer;
@@ -9,7 +9,6 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
@@ -73,10 +72,10 @@ public class MyUtils {
 
         //判断文件是否符合该文件形式下的文件大小限制
         if (file == null || file.isEmpty()) {
-            throw new MyException(ErrorConstant.File.FILE_IS_EMPTY);
+            throw new MyException(ErrorConsts.File.FILE_IS_EMPTY);
         }
         if (file.getSize() > fileUploadEnum.getMaxSize()) {
-            throw new MyException(ErrorConstant.File.FILE_SIZE_EXCEEDS);
+            throw new MyException(ErrorConsts.File.FILE_SIZE_EXCEEDS);
         }
 
         // 获取文件名
@@ -94,12 +93,12 @@ public class MyUtils {
         try {
             file.transferTo(new File(uploadFile, fileName));
         } catch (IOException e) {
-            throw new MyException(ErrorConstant.File.FILE_UPLOAD_ERROR);
+            throw new MyException(ErrorConsts.File.FILE_UPLOAD_ERROR);
         }
 
         log.info("文件上传成功");
 
-        return basePath + "/" + fileName;
+        return "/file/" + fileName;
     }
 
     /**
@@ -130,7 +129,7 @@ public class MyUtils {
 
         if (StringUtils.isEmpty(username)) {
             flag = false;
-        } else if (username.length() > DefaultConstant.User.USER_NAME_MAX_LENGTH) {
+        } else if (username.length() > DefaultConsts.User.USER_NAME_MAX_LENGTH) {
             flag = false;
         } else if (!Pattern.matches("([a-z]|[A-Z]|[0-9]|[\\u4e00-\\u9fa5])+.*", username)) {
             flag = false;

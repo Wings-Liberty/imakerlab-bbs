@@ -1,7 +1,7 @@
 package cn.imakerlab.bbs.service.Imp;
 
-import cn.imakerlab.bbs.constant.DefaultConstant;
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.DefaultConsts;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import cn.imakerlab.bbs.mapper.ArticleDao;
 import cn.imakerlab.bbs.mapper.CommentDao;
 import cn.imakerlab.bbs.mapper.UserDao;
@@ -43,8 +43,8 @@ public class CommentServiceImp implements CommentService {
     @Override
     public void insertComment(Integer userId, String username, Integer articleId, String content, boolean isEffectArticle) {
 
-        if (content.length() > DefaultConstant.Comment.COMMENT_MAX_LENGTH) {
-            throw new MyException(ErrorConstant.Comment.COMMENT_LENGTH_IS_EXECEEDS);
+        if (content.length() > DefaultConsts.Comment.COMMENT_MAX_LENGTH) {
+            throw new MyException(ErrorConsts.Comment.COMMENT_LENGTH_IS_EXECEEDS);
         }
 
         byte effectArticle = (byte) (isEffectArticle ? 1 : 0);
@@ -102,8 +102,8 @@ public class CommentServiceImp implements CommentService {
                 continue;
             }
             if (user.getIsDeleted() == 1) {
-                user.setUsername(DefaultConstant.User.DELETED_USER_USERNAME);
-                user.setFigureUrl(DefaultConstant.User.DELETED_USER_FIGURE_URL);
+                user.setUsername(DefaultConsts.User.DELETED_USER_USERNAME);
+                user.setFigureUrl(DefaultConsts.User.DELETED_USER_FIGURE_URL);
             }
 
             commentVoList.add(new CommentVo(

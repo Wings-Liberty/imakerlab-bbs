@@ -1,13 +1,12 @@
 package cn.imakerlab.bbs.security;
 
-import cn.imakerlab.bbs.constant.DefaultConstant;
+import cn.imakerlab.bbs.constant.DefaultConsts;
 import cn.imakerlab.bbs.utils.ResultUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 
@@ -26,7 +25,7 @@ public class MyResponseAdvice implements ResponseBodyAdvice {
 
         System.out.println("拦截的方法名是" + methodParameter.getMethod().getName());;
 
-        if(methodParameter.getMethod().getName().equals(DefaultConstant.Token.GET_TOKEN_METHOD)){
+        if(methodParameter.getMethod().getName().equals(DefaultConsts.Token.GET_TOKEN_METHOD)){
             return true;
         }
 

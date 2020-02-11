@@ -1,6 +1,6 @@
 package cn.imakerlab.bbs.security;
 
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.po.UserExample;
 import cn.imakerlab.bbs.utils.MyUtils;
@@ -39,8 +39,8 @@ public class MyUserDetailsService implements UserDetailsService {
         );
 
         if (user == null){
-            logger.error(ErrorConstant.User.USER_NAME_NOTFOUND);
-            throw new UsernameNotFoundException(ErrorConstant.User.USER_NAME_NOTFOUND);
+            logger.error(ErrorConsts.User.USER_NAME_NOTFOUND);
+            throw new UsernameNotFoundException(ErrorConsts.User.USER_NAME_NOTFOUND);
         }
 
         String password = user.getPassword();

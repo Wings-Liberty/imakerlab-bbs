@@ -1,6 +1,6 @@
 package cn.imakerlab.bbs.constant;
 
-public interface ErrorConstant {
+public interface ErrorConsts {
 
     interface User{
         String USER_NAME_NOTFOUND = "用户名找不到";

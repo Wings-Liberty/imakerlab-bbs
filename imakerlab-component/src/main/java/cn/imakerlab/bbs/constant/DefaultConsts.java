@@ -1,6 +1,6 @@
 package cn.imakerlab.bbs.constant;
 
-public interface DefaultConstant {
+public interface DefaultConsts {
 
     interface Token{
         //获取token执行的方法

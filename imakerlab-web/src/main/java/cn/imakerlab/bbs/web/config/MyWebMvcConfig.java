@@ -1,5 +1,6 @@
-package cn.imakerlab.bbs.security.config;
+package cn.imakerlab.bbs.web.config;
 
+import cn.imakerlab.bbs.enums.FileUploadEnum;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,8 +12,6 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/file/**")
-                .addResourceLocations("file:D:/IDEA-workspace/imakerlab-bbs/imakerlab-web/src/main/resources/static/uploadfile/");
-//                    .addResourceLocations("/webapp/uploadfile/");
-
+                .addResourceLocations("file:" + FileUploadEnum.FIGURE.getUploadUrl());
     }
 }

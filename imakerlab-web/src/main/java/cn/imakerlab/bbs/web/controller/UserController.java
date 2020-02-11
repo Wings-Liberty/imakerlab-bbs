@@ -1,9 +1,6 @@
 package cn.imakerlab.bbs.web.controller;
 
-import cn.imakerlab.bbs.constant.DefaultConstant;
-import cn.imakerlab.bbs.constant.ErrorConstant;
 import cn.imakerlab.bbs.enums.FileUploadEnum;
-import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.vo.UserVo;
 import cn.imakerlab.bbs.security.utils.SecurityUtils;
 import cn.imakerlab.bbs.service.Imp.UserServiceImp;

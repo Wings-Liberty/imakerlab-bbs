@@ -1,6 +1,6 @@
 package cn.imakerlab.bbs.security.handler;
 
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -8,7 +8,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
         Map<String,String> map = new HashMap<>();
         map.put("code", "100");
 
-        if(authException.getMessage().contains(ErrorConstant.Token.TOKEN_IS_EXPIRED)){
+        if(authException.getMessage().contains(ErrorConsts.Token.TOKEN_IS_EXPIRED)){
             map.put("msg", "token已过期");
 
         }else {

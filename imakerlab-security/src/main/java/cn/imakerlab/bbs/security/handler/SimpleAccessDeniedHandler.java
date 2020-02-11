@@ -1,6 +1,6 @@
 package cn.imakerlab.bbs.security.handler;
 
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -23,7 +23,7 @@ public class SimpleAccessDeniedHandler implements AccessDeniedHandler {
         Map<String,String> map = new HashMap<>();
         map.put("code", "100");
 
-        map.put("msg", ErrorConstant.Authority.ACCESS_IS_DENIED);
+        map.put("msg", ErrorConsts.Authority.ACCESS_IS_DENIED);
 
         map.put("body" , "");
 

@@ -1,6 +1,6 @@
 package cn.imakerlab.bbs.web.controller;
 
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.po.Todo;
 import cn.imakerlab.bbs.security.utils.SecurityUtils;
@@ -10,7 +10,6 @@ import cn.imakerlab.bbs.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +42,7 @@ public class TodoController {
         }
 
         if (userService.getUserByUserId(userId) == null) {
-            throw new MyException(ErrorConstant.User.USER_NOT_FOUND);
+            throw new MyException(ErrorConsts.User.USER_NOT_FOUND);
         }
 
         List<Todo> todoList = todoService.listNotDeletedTodoListByUserId(userId);
@@ -67,7 +66,7 @@ public class TodoController {
         if (isEnableAddTodo) {
             todoService.insertTodoByUserId(userId, todo);
         } else {
-            return ResultUtils.failure(ErrorConstant.Todo.TODO_COUNT_IS_EXECEEDS);
+            return ResultUtils.failure(ErrorConsts.Todo.TODO_COUNT_IS_EXECEEDS);
         }
 
         return ResultUtils.success();

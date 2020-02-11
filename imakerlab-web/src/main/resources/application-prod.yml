@@ -1,0 +1,37 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /imakerlab/bbs
+spring:
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    # druid相关配置
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://39.107.101.13:3306/imakerlab_bbs?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: root
+      password: root
+      initial-size: 1
+      min-idle: 2
+      max-active: 5
+  servlet:
+    # 最大支持文件大小
+    # 最大支持请求大小
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+#  resources:
+#    static-locations: file:E:\upload
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: cn.imakerlab.bbs.model
+pagehelper:
+  reasonable: true
+  supportMethodsArguments: true
+  pageSizeZero: false #pageSize=0
+logging:
+  file:
+    path: /webapp/imakerlab/bbs/log
+    name: imakerlab-bbs.log

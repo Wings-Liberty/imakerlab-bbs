@@ -1,7 +1,7 @@
 package cn.imakerlab.bbs.service.Imp;
 
-import cn.imakerlab.bbs.constant.DefaultConstant;
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.DefaultConsts;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import cn.imakerlab.bbs.mapper.UserDao;
 import cn.imakerlab.bbs.model.po.User;
 import cn.imakerlab.bbs.model.po.UserExample;
@@ -9,19 +9,14 @@ import cn.imakerlab.bbs.model.exception.MyException;
 import cn.imakerlab.bbs.model.vo.UserVo;
 import cn.imakerlab.bbs.service.UserService;
 import cn.imakerlab.bbs.utils.MyUtils;
-import cn.imakerlab.bbs.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +38,14 @@ public class UserServiceImp implements UserService {
     public void register(String username, String password) {
 
         if (!MyUtils.matchUsername(username)) {
-            throw new MyException(ErrorConstant.User.USER_NAME_NOT_FORMAT);
+            throw new MyException(ErrorConsts.User.USER_NAME_NOT_FORMAT);
         }
         if (!MyUtils.matchPassword(password)) {
-            throw new MyException(ErrorConstant.User.USER_PASSWORD_NOT_FORMAT);
+            throw new MyException(ErrorConsts.User.USER_PASSWORD_NOT_FORMAT);
         }
         if (isExistUsername(username)) {
             logger.info("用户名：'" + username + "'已存在");
-            throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
+            throw new MyException(ErrorConsts.User.USER_NAME_EXIT);
         }
 
         logger.info("没有和'" + username + "'重复的名字，这个名字可以注册账号");
@@ -59,7 +54,7 @@ public class UserServiceImp implements UserService {
 
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        user.setFigureUrl(DefaultConstant.User.USER_FIGURE_URL);
+        user.setFigureUrl(DefaultConsts.User.USER_FIGURE_URL);
         user.setSlogan("");
         user.setStars(0);
         user.setAuthority("");
@@ -117,11 +112,11 @@ public class UserServiceImp implements UserService {
     public void setSloganAndUsernameByUserId(int userId, String newSlogan, String newUsername) {
 
         if (!MyUtils.matchUsername(newUsername)) {
-            throw new MyException(ErrorConstant.User.USER_NAME_NOT_FORMAT);
+            throw new MyException(ErrorConsts.User.USER_NAME_NOT_FORMAT);
         } else if (isExistUsername(newUsername)) {
-            throw new MyException(ErrorConstant.User.USER_NAME_EXIT);
-        } else if (newSlogan.length() > DefaultConstant.User.USER_SLOGAN_MAX_LENGTH) {
-            throw new MyException(ErrorConstant.User.USER_SLOGAN_SIZE_EXECEEDS);
+            throw new MyException(ErrorConsts.User.USER_NAME_EXIT);
+        } else if (newSlogan.length() > DefaultConsts.User.USER_SLOGAN_MAX_LENGTH) {
+            throw new MyException(ErrorConsts.User.USER_SLOGAN_SIZE_EXECEEDS);
         }
 
         User user = new User();
@@ -175,7 +170,7 @@ public class UserServiceImp implements UserService {
     public void updatePasswordByUserId(int userId, String oldPassword, String newPassword) {
 
         if (!MyUtils.matchPassword(newPassword)) {
-            throw new MyException(ErrorConstant.User.USER_PASSWORD_NOT_FORMAT);
+            throw new MyException(ErrorConsts.User.USER_PASSWORD_NOT_FORMAT);
         }
 
         UserExample example = new UserExample();
@@ -189,7 +184,7 @@ public class UserServiceImp implements UserService {
 
             userDao.updateByExampleSelective(user, example);
         } else {
-            throw new MyException(ErrorConstant.User.PASSWORD_NOT_MATCH);
+            throw new MyException(ErrorConsts.User.PASSWORD_NOT_MATCH);
         }
 
     }
@@ -209,7 +204,7 @@ public class UserServiceImp implements UserService {
         User user = getUserByUserId(userId);
 
         if (user.getIsDeleted() == 1) {
-            throw new MyException(ErrorConstant.User.USER_IS_DELETED);
+            throw new MyException(ErrorConsts.User.USER_IS_DELETED);
         }
 
         UserVo userVo = new UserVo(user);
@@ -254,7 +249,7 @@ public class UserServiceImp implements UserService {
     public String getUsernameByUserId(Integer userId) {
         User user = getUserByUserId(userId);
 
-        String username = DefaultConstant.User.DELETED_USER_USERNAME;
+        String username = DefaultConsts.User.DELETED_USER_USERNAME;
 
         if(user.getIsDeleted() == 0){
             username = user.getUsername();

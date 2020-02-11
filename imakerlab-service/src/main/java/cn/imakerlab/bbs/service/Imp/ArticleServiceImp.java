@@ -1,7 +1,7 @@
 package cn.imakerlab.bbs.service.Imp;
 
-import cn.imakerlab.bbs.constant.DefaultConstant;
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.DefaultConsts;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import cn.imakerlab.bbs.enums.ArticleTypeEnum;
 import cn.imakerlab.bbs.enums.LabelEnum;
 import cn.imakerlab.bbs.enums.RoleEnum;
@@ -16,7 +16,6 @@ import cn.imakerlab.bbs.model.vo.ArticleVo;
 import cn.imakerlab.bbs.model.vo.BackContentVo;
 import cn.imakerlab.bbs.service.ArticleService;
 import cn.imakerlab.bbs.utils.MyUtils;
-import cn.imakerlab.bbs.utils.ResultUtils;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,7 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public List<BackContentVo> searchMsgByKey(String key) {
 
-        PageHelper.startPage(1, DefaultConstant.Page.PAGE_SIZE);
+        PageHelper.startPage(1, DefaultConsts.Page.PAGE_SIZE);
 
         ArticleExample example = new ArticleExample();
 
@@ -147,10 +146,10 @@ public class ArticleServiceImp implements ArticleService {
         Article article = articleDao.selectByPrimaryKey(id);
 
         if (article == null) {
-            throw new MyException(ErrorConstant.Article.ARTICLE_IS_NOT_FOUND);
+            throw new MyException(ErrorConsts.Article.ARTICLE_IS_NOT_FOUND);
         }
         if (article.getIsDeleted() == 1) {
-            throw new MyException(ErrorConstant.Article.ARTICLE_IS_DELETED);
+            throw new MyException(ErrorConsts.Article.ARTICLE_IS_DELETED);
         }
 
         return article;
@@ -176,8 +175,8 @@ public class ArticleServiceImp implements ArticleService {
 
         User user = userDao.selectByPrimaryKey(article.getAuthorId());
         if(user.getIsDeleted() == 1){
-            articleVo.setAuthorName(DefaultConstant.User.DELETED_USER_USERNAME);
-            articleVo.setAuthorFigureUrl(DefaultConstant.User.USER_FIGURE_URL);
+            articleVo.setAuthorName(DefaultConsts.User.DELETED_USER_USERNAME);
+            articleVo.setAuthorFigureUrl(DefaultConsts.User.USER_FIGURE_URL);
         }else {
             articleVo.setAuthorName(user.getUsername());
             articleVo.setAuthorFigureUrl(user.getFigureUrl());
@@ -216,11 +215,10 @@ public class ArticleServiceImp implements ArticleService {
         articleExampleCriteria.andAuthorIdEqualTo(authorId);
 
         Article article = new Article();
-        article.setAuthorId(authorId);
-        article.setId(articleId);
         article.setText(text);
         article.setTitle(title);
         article.setLabel(label);
+        article.setLastModified(new Date());
 
         if (user.getAuthority().contains(RoleEnum.ROLE_ADMIN.toString())) {
 

@@ -1,8 +1,8 @@
 package cn.imakerlab.bbs.web.controller;
 
 import cn.imakerlab.bbs.enums.RoleEnum;
-import cn.imakerlab.bbs.constant.DefaultConstant;
-import cn.imakerlab.bbs.constant.ErrorConstant;
+import cn.imakerlab.bbs.constant.DefaultConsts;
+import cn.imakerlab.bbs.constant.ErrorConsts;
 import cn.imakerlab.bbs.enums.FileUploadEnum;
 import cn.imakerlab.bbs.enums.ArticleTypeEnum;
 import cn.imakerlab.bbs.model.po.Article;
@@ -59,11 +59,11 @@ public class ArticleController {
 
         log.info("查询第" + pn + "页的信息");
 
-        PageHelper.startPage(pn, DefaultConstant.Page.PAGE_SIZE);
+        PageHelper.startPage(pn, DefaultConsts.Page.PAGE_SIZE);
 
         List<ArticleVo> articleVoList = articleService.listArticleVosByType(ArticleTypeEnum.getArticleTypeEnumByType(type));
 
-        PageInfo<ArticleVo> articlePageInfo = new PageInfo<>(articleVoList, DefaultConstant.Page.NAVAGATE_PAGES);
+        PageInfo<ArticleVo> articlePageInfo = new PageInfo<>(articleVoList, DefaultConsts.Page.NAVAGATE_PAGES);
 
         return ResultUtils.success(articlePageInfo);
     }
@@ -82,7 +82,7 @@ public class ArticleController {
 
             return ResultUtils.success(map);
         } else {
-            return ResultUtils.failure(ErrorConstant.Article.SEARCH_CONTENT_NULL);
+            return ResultUtils.failure(ErrorConsts.Article.SEARCH_CONTENT_NULL);
         }
     }
 

@@ -21,8 +21,8 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  resources:
-    static-locations: file:E:\upload
+#  resources:
+#    static-locations: file:E:\upload
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -31,3 +31,6 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   pageSizeZero: false #pageSize=0
+logging:
+  file:
+    name: log/imakerlab-bbs.log

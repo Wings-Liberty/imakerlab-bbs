@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @Slf4j
@@ -39,6 +41,21 @@ public class TestController {
     @Autowired
     UserDao userDao;
 
+    @GetMapping("/test/ipconfig")
+    @ResponseBody
+    public ResultUtils getIp(){
+        InetAddress addr = null;
+        try {
+            addr = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Local HostAddress:"+addr.getHostAddress());
+                String hostname = addr.getHostName();
+        System.out.println("Local host name: "+hostname);
+
+        return ResultUtils.success();
+    }
 
     @PostMapping("/test/upload")
     @ResponseBody

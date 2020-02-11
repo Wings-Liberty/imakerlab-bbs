@@ -1,8 +1,9 @@
 package cn.imakerlab.bbs.enums;
 
 public enum FileUploadEnum {
-    FIGURE("figure", 1024*1024, "D:\\IDEA-workspace\\imakerlab-bbs\\imakerlab-web\\src\\main\\resources\\static\\uploadfile"),
-    PICTURE("picture", 1024*1024*3, "D:\\IDEA-workspace\\imakerlab-bbs\\imakerlab-web\\src\\main\\resources\\static\\uploadfile");
+    FIGURE("figure", 1024*1024, "/webapp/imakerlab/bbs/uploadfile"),
+    PICTURE("picture", 1024*1024*3, "/webapp/imakerlab/bbs/uploadfile"),
+    FILE("file", 1024*1024*3, "/webapp/imakerlab/bbs/uploadfile");
 
     private String value;
     private Integer maxSize;
